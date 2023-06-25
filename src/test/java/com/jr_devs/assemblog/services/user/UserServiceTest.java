@@ -1,6 +1,7 @@
 package com.jr_devs.assemblog.services.user;
 
 import com.jr_devs.assemblog.models.User;
+import com.jr_devs.assemblog.models.UserDto;
 import com.jr_devs.assemblog.repositoryes.JpaUserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,55 +28,65 @@ public class UserServiceTest {
     @Test
     @DisplayName("회원가입 테스트")
     void join() {
-        User user = new User();
+        // given
+        UserDto userDto = new UserDto();
+        userDto.setUsername("user1");
+        userDto.setEmail("user1@gmail.com");
+        userDto.setPassword("1234");
 
-        user.setUsername("user1");
-        user.setEmail("user1@gmail.com");
-        user.setPassword("1234");
+        // when
+        User joinedUser = this.userService.join(userDto);
 
-        User joinedUser = this.userService.join(user);
-        assertThat(joinedUser).isSameAs(this.userRepository.findById(user.getId()).get());
+        // then
+        // 가입된 유저와 userForm 으로 입력한 유저가 같은지 확인
+        assertThat(joinedUser).isSameAs(this.userRepository.findByEmail(userDto.getEmail()).get());
     }
 
     @Test
     @DisplayName("유저네임 중복 테스트")
     void DuplicateUsernameCheck() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setEmail("user1@gmail.com");
-        user1.setPassword("1234");
+        // given
+        UserDto userDto1 = new UserDto();
+        userDto1.setUsername("user1");
+        userDto1.setEmail("user1@gmail.com");
+        userDto1.setPassword("1234");
 
-        User user2 = new User();
-        user2.setUsername("user1");
-        user2.setEmail("user2@gmail.com");
-        user2.setPassword("1234");
+        UserDto userDto2 = new UserDto();
+        userDto2.setUsername("user1");
+        userDto2.setEmail("user2@gmail.com");
+        userDto2.setPassword("1234");
 
-        userService.join(user1);
+        // when
+        userService.join(userDto1);
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-            userService.join(user2);
+            userService.join(userDto2);
         });
 
+        // then
         assertThat(e.getMessage()).isEqualTo("Username Already exist");
     }
 
     @Test
     @DisplayName("이메일 중복 테스트")
     void DuplicateEmailCheck() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setEmail("user1@gmail.com");
-        user1.setPassword("1234");
+        // given
+        UserDto userDto1 = new UserDto();
+        userDto1.setUsername("user1");
+        userDto1.setEmail("user1@gmail.com");
+        userDto1.setPassword("1234");
 
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setEmail("user1@gmail.com");
-        user2.setPassword("1234");
+        UserDto userDto2 = new UserDto();
+        userDto2.setUsername("user2");
+        userDto2.setEmail("user1@gmail.com");
+        userDto2.setPassword("1234");
 
-        userService.join(user1);
+        // when
+        userService.join(userDto1);
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-            userService.join(user2);
+            userService.join(userDto2);
         });
 
+        // then
         assertThat(e.getMessage()).isEqualTo("Email Already exist");
     }
 }

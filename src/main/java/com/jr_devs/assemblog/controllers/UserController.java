@@ -1,45 +1,37 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.User;
-import com.jr_devs.assemblog.models.UserForm;
+import com.jr_devs.assemblog.models.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/users")
+@RestController
 public class UserController {
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @PostMapping({"/login"})
-    public void login() {
+    public String login(@RequestBody UserDto userDto) {
+        try {
+            return this.userService.login(userDto);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     @PostMapping({"/signup"})
-    public ResponseEntity<?> signup(UserForm userForm) {
-        User user = new User();
-
-        user.setUsername(userForm.getUsername());
-        user.setEmail(userForm.getEmail());
-        user.setPassword(this.bCryptPasswordEncoder.encode(userForm.getPassword()));
-
+    public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
         try {
-            this.userService.join(user);
+            this.userService.join(userDto);
             return ResponseEntity.ok().build();
-        } catch (IllegalStateException var4) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(var4.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

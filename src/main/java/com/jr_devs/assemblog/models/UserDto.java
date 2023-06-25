@@ -1,11 +1,13 @@
 package com.jr_devs.assemblog.models;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserForm {
+@NoArgsConstructor
+public class UserDto {
 
     private String username;
     private String email;
