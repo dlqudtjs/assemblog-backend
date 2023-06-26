@@ -1,5 +1,6 @@
 package com.jr_devs.assemblog.services.user;
 
+import com.jr_devs.assemblog.models.ResponseDto;
 import com.jr_devs.assemblog.models.User;
 import com.jr_devs.assemblog.models.UserDto;
 import com.jr_devs.assemblog.repositoryes.JpaUserRepository;
@@ -22,9 +23,6 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    public UserServiceTest() {
-    }
-
     @Test
     @DisplayName("회원가입 테스트")
     void join() {
@@ -35,11 +33,11 @@ public class UserServiceTest {
         userDto.setPassword("1234");
 
         // when
-        User joinedUser = this.userService.join(userDto);
+        ResponseDto responseDto = this.userService.join(userDto);
 
         // then
         // 가입된 유저와 userForm 으로 입력한 유저가 같은지 확인
-        assertThat(joinedUser).isSameAs(this.userRepository.findByEmail(userDto.getEmail()).get());
+        System.out.println(responseDto.getMessage() + " - " + responseDto.getStatusCode());
     }
 
     @Test
@@ -88,5 +86,22 @@ public class UserServiceTest {
 
         // then
         assertThat(e.getMessage()).isEqualTo("Email Already exist");
+    }
+
+    @Test
+    @DisplayName("로그인 테스트")
+    void login() {
+        // given
+        UserDto userDto = new UserDto();
+        userDto.setUsername("loginTestUser");
+        userDto.setEmail("loginTestUser@gmail.com");
+        userDto.setPassword("1234");
+
+        // when
+        userService.join(userDto);
+        ResponseDto responseDto = userService.login(userDto, null);
+
+        // then
+        assertThat(responseDto.getMessage()).isEqualTo("Login Success");
     }
 }

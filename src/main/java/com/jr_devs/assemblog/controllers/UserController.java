@@ -2,6 +2,7 @@ package com.jr_devs.assemblog.controllers;
 
 import com.jr_devs.assemblog.models.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +18,18 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping({"/login"})
-    public String login(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> login(@RequestBody UserDto userDto, HttpServletResponse response) {
         try {
-            return this.userService.login(userDto);
+            return ResponseEntity.ok(userService.login(userDto, response).getMessage());
         } catch (Exception e) {
-            return e.getMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @PostMapping({"/signup"})
-    public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> signup(@RequestBody UserDto userDto) {
         try {
-            this.userService.join(userDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(userService.join(userDto).getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

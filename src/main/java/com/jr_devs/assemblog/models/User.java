@@ -12,6 +12,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "user")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,7 @@ public class User implements UserDetails {
     @Setter
     @Column(length = 255, nullable = false)
     private String password;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

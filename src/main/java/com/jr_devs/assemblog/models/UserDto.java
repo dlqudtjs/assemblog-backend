@@ -1,8 +1,6 @@
 package com.jr_devs.assemblog.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
