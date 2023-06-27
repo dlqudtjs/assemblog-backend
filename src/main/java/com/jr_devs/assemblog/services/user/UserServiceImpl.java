@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         // Response Header 에 Access Token, Refresh Token 을 추가한다.
         setHeader(response, tokenDto);
 
-        return new ResponseDto("Success login", HttpStatus.OK.value());
+        return new ResponseDto(user.getEmail(), HttpStatus.OK.value());
     }
 
     public ResponseDto join(UserDto userDto) {
@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
-        response.setHeader("Access-Token", tokenDto.getAccessToken());
-        response.setHeader("Refresh-Token", tokenDto.getRefreshToken());
+        response.setHeader("accesstoken", tokenDto.getAccessToken());
+        response.setHeader("refreshtoken", tokenDto.getRefreshToken());
     }
 
     private void checkDuplicate(UserDto userDto) {

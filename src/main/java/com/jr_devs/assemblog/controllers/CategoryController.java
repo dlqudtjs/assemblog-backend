@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @PostMapping("/")
-    public ResponseEntity<String> createCategory(@RequestBody String name) {
+    @PostMapping
+    public ResponseEntity<String> createCategory() {
         try {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("hello");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
