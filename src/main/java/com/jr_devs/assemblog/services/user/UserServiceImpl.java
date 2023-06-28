@@ -26,9 +26,10 @@ public class UserServiceImpl implements UserService {
     private final JpaRefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final HttpServletResponse response;
 
     @Override
-    public ResponseDto login(UserDto UserForm, HttpServletResponse response) {
+    public ResponseDto login(UserDto UserForm) {
         // 이메일 검사
         User user = userRepository.findByEmail(UserForm.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found Email"));
@@ -38,22 +39,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Not Match Password");
         }
 
-        // Access Token, Refresh Token 생성
-        TokenDto tokenDto = jwtProvider.createAllToken(user.getEmail());
-
-        // DB 에 Refresh Token 이 존재하는지 검사
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByEmail(user.getEmail());
-
-        // DB 에 Refresh Token 이 존재하면 Refresh Token 을 삭제한다.
-        if (refreshToken.isPresent()) {
-            refreshTokenRepository.deleteById(refreshToken.get().getId());
-        }
-
-        // DB 에 Refresh Token 을 저장한다.
-        refreshTokenRepository.save(RefreshToken.builder()
-                .refreshToken(tokenDto.getRefreshToken())
-                .email(user.getEmail())
-                .build());
+        TokenDto tokenDto = jwtProvider.loginLogic(user.getEmail());
 
         // Response Header 에 Access Token, Refresh Token 을 추가한다.
         setHeader(response, tokenDto);
@@ -72,6 +58,7 @@ public class UserServiceImpl implements UserService {
 
         // 회원가입
         userRepository.save(user);
+        
         // 회원가입 성공시 응답
         return ResponseDto.builder()
                 .message("Success signup")

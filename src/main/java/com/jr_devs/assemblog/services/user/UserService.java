@@ -9,5 +9,5 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface UserService {
     ResponseDto join(UserDto UserForm);
 
-    ResponseDto login(UserDto UserForm, HttpServletResponse response);
+    ResponseDto login(UserDto UserForm);
 }

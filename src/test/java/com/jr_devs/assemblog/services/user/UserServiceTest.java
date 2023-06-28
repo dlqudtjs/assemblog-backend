@@ -1,10 +1,7 @@
 package com.jr_devs.assemblog.services.user;
 
 import com.jr_devs.assemblog.models.ResponseDto;
-import com.jr_devs.assemblog.models.User;
 import com.jr_devs.assemblog.models.UserDto;
-import com.jr_devs.assemblog.repositoryes.JpaUserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 public class UserServiceTest {
-
-    @Autowired
-    private JpaUserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -90,20 +84,20 @@ public class UserServiceTest {
     }
 
     // todo jwt 로그인 테스트 구현하기
-//    @Test
-//    @DisplayName("로그인 테스트")
-//    void login() {
-//        // given
-//        UserDto userDto = new UserDto();
-//        userDto.setUsername("loginTestUser");
-//        userDto.setEmail("loginTestUser@gmail.com");
-//        userDto.setPassword("1234");
-//
-//        // when
-//        userService.join(userDto);
-//        ResponseDto responseDto = userService.login(userDto, response);
-//
-//        // then
-//        assertThat(responseDto.getMessage()).isEqualTo("Login Success");
-//    }
+    @Test
+    @DisplayName("로그인 테스트")
+    void login() {
+        // given
+        UserDto userDto = new UserDto();
+        userDto.setUsername("loginTestUser");
+        userDto.setEmail("loginTestUser@gmail.com");
+        userDto.setPassword("1234");
+
+        // when
+        userService.join(userDto);
+
+        // then
+        ResponseDto responseDto = userService.login(userDto);
+        assertThat(responseDto.getMessage()).isEqualTo("loginTestUser@gmail.com");
+    }
 }
