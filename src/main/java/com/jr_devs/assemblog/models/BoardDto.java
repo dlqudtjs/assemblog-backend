@@ -1,25 +1,21 @@
 package com.jr_devs.assemblog.models;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+public class BoardDto {
 
     private Long id;
 
+    private Long parentId;
+
     private String title;
 
-    @ColumnDefault("true")
     private boolean useState;
 
     private int orderNum;
-
-    private List<Board> boards;
 }

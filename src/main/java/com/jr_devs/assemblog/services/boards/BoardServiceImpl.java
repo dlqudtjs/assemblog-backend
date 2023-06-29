@@ -1,0 +1,96 @@
+package com.jr_devs.assemblog.services.boards;
+
+import com.jr_devs.assemblog.models.Board;
+import com.jr_devs.assemblog.models.BoardDto;
+import com.jr_devs.assemblog.models.Category;
+import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class BoardServiceImpl implements BoardService {
+
+    private final JpaBoardRepository boardRepository;
+
+    @Override
+    public ResponseDto createBoard(BoardDto boardDto) {
+        if (!checkDuplicate(boardDto.getParentId(), boardDto.getTitle())) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
+        }
+
+        int order = getBoardOrder().intValue() + 1;
+
+        // 게시판 생성
+        boardRepository.save(Board.builder()
+                .parentId(boardDto.getParentId())
+                .title(boardDto.getTitle())
+                .useState(true)
+                .orderNum(order)
+                .build());
+
+        // 게시판 생성 응답
+        return createResponse(HttpStatus.OK.value(), "Success create board");
+    }
+
+    @Override
+    public ResponseDto updateBoard(BoardDto boardDto) {
+        Board board = boardRepository.findById(boardDto.getId()).orElse(null);
+
+        if (board == null) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
+        }
+
+        board.setTitle(boardDto.getTitle());
+        board.setUseState(boardDto.isUseState());
+        board.setOrderNum(boardDto.getOrderNum());
+
+        return createResponse(HttpStatus.OK.value(), "Success update board");
+    }
+
+    @Override
+    public ResponseDto deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+
+        if (board == null && !board.isUseState()) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
+        }
+
+        board.setUseState(false);
+
+        return createResponse(HttpStatus.OK.value(), "Success delete board");
+    }
+
+    @Override
+    public List<Board> readAllByParentId(Long parentId) {
+        return boardRepository.findAllByParentId(parentId);
+    }
+
+    private Long getBoardOrder() {
+        return boardRepository.countBy();
+    }
+
+    // 카테고리명 중복 체크
+    private Boolean checkDuplicate(Long parentId, String title) {
+        List<Board> boards = readAllByParentId(parentId);
+        // parentId로 찾은 board 안에 중복된 title 이 있는지 확인
+        for (Board board : boards) {
+            if (board.getTitle().equals(title)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private ResponseDto createResponse(int value, String message) {
+        return ResponseDto.builder()
+                .statusCode(value)
+                .message(message)
+                .build();
+    }
+}

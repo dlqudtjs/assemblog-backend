@@ -6,29 +6,46 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/api/categories")
     public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
         try {
-
-            return ResponseEntity.ok(categoryService.createCategory(categoryDto.getTitle()).getMessage());
+            return ResponseEntity.ok(categoryService.createCategory(categoryDto).getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    
-    // todo 변경하는 항목만 받아서 변경하도록 수정
-    @PatchMapping("/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody String name) {
+    // 전체 카테고리 조회
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDto>> readAllCategoriesAndBoards() {
         try {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(categoryService.readAllCategoriesAndBoards());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PatchMapping("/api/categories")
+    public ResponseEntity<String> updateCategory(@RequestBody CategoryDto categoryDto) {
+        try {
+            return ResponseEntity.ok(categoryService.updateCategory(categoryDto).getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/api/categories/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId) {
+        try {
+            return ResponseEntity.ok(categoryService.deleteCategory(categoryId).getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

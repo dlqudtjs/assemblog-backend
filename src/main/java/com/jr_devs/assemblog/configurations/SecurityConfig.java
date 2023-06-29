@@ -45,8 +45,9 @@ public class SecurityConfig {
                     authorizeRequests
                             // "/users/signup", "/users/login" 은 누구나 접근 가능
                             .requestMatchers("/users/signup", "/users/login").permitAll()
-                            // 그외 모든 요청은 인증된 회원만 접근 가능
-                            .anyRequest().authenticated();
+                            .requestMatchers("/*").permitAll()
+                            // api 로 시작하는 경로는 인증이 필요함
+                            .requestMatchers("/api/**").authenticated();
                 })
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
