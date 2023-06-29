@@ -14,5 +14,7 @@ public interface JpaBoardRepository extends JpaRepository<Board, Long> {
 
     Optional<Board> findByTitle(String title);
 
+    List<Board> findAllByTitle(String title);
+
     Long countBy();
 }

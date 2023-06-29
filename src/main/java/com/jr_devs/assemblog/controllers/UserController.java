@@ -1,5 +1,6 @@
 package com.jr_devs.assemblog.controllers;
 
+import com.jr_devs.assemblog.models.ResponseDto;
 import com.jr_devs.assemblog.models.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,8 @@ public class UserController {
     @PostMapping({"/login"})
     public ResponseEntity<String> login(@RequestBody UserDto userDto) {
         try {
-            return ResponseEntity.ok(userService.login(userDto).getMessage());
+            ResponseDto responseDto = userService.login(userDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -28,7 +30,8 @@ public class UserController {
     @PostMapping({"/signup"})
     public ResponseEntity<String> signup(@RequestBody UserDto userDto) {
         try {
-            return ResponseEntity.ok(userService.join(userDto).getMessage());
+            ResponseDto responseDto = userService.join(userDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

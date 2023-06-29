@@ -45,6 +45,13 @@ public class BoardServiceImpl implements BoardService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
         }
 
+        List<Board> boardList = boardRepository.findAllByTitle(boardDto.getTitle());
+        for (Board b : boardList) {
+            if (!b.getId().equals(boardDto.getId())) {
+                return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
+            }
+        }
+
         board.setTitle(boardDto.getTitle());
         board.setUseState(boardDto.isUseState());
         board.setOrderNum(boardDto.getOrderNum());
@@ -59,6 +66,7 @@ public class BoardServiceImpl implements BoardService {
         if (board == null && !board.isUseState()) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
         }
+
 
         board.setUseState(false);
 

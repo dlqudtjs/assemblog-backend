@@ -54,6 +54,14 @@ public class CategoryServiceImpl implements CategoryService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
         }
 
+        List<Category> categoryList = categoryRepository.findAllByTitle(categoryDto.getTitle());
+        for (Category c : categoryList) {
+            if (!c.getId().equals(categoryDto.getId())) {
+                return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
+            }
+        }
+
+
         category.setTitle(categoryDto.getTitle());
         category.setUseState(categoryDto.isUseState());
         category.setOrderNum(categoryDto.getOrderNum());
@@ -83,7 +91,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         for (Category category : categories) {
             // 카테고리 숨김 표시는 제외
-            if (!category.isUseState()) continue;
 
             List<Board> boards = boardService.readAllByParentId(category.getId());
 

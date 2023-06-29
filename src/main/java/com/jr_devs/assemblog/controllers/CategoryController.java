@@ -1,6 +1,7 @@
 package com.jr_devs.assemblog.controllers;
 
 import com.jr_devs.assemblog.models.CategoryDto;
+import com.jr_devs.assemblog.models.ResponseDto;
 import com.jr_devs.assemblog.services.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ public class CategoryController {
     @PostMapping("/api/categories")
     public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
         try {
-            return ResponseEntity.ok(categoryService.createCategory(categoryDto).getMessage());
+            ResponseDto responseDto = categoryService.createCategory(categoryDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -36,16 +38,18 @@ public class CategoryController {
     @PatchMapping("/api/categories")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryDto categoryDto) {
         try {
-            return ResponseEntity.ok(categoryService.updateCategory(categoryDto).getMessage());
+            ResponseDto responseDto = categoryService.updateCategory(categoryDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/api/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         try {
-            return ResponseEntity.ok(categoryService.deleteCategory(categoryId).getMessage());
+            ResponseDto responseDto = categoryService.deleteCategory(categoryId);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

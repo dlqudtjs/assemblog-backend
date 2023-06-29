@@ -14,6 +14,8 @@ public interface JpaCategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByTitle(String title);
 
+    List<Category> findAllByTitle(String title);
+
     void deleteById(Long id);
 
     Long countBy();
