@@ -77,9 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
         }
 
-        // 카테고리 삭제
-        // JPA 는 트랜잭션이 끝나는 시점에 변경사항을 DB에 반영한다. (삭제대신 사용유무를 false 로 변경)
-        category.setUseState(false);
+        categoryRepository.deleteById(categoryId);
 
         // 카테고리 삭제 응답
         return createResponse(HttpStatus.OK.value(), "Success delete category");

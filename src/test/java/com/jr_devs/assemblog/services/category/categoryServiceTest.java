@@ -80,13 +80,10 @@ public class categoryServiceTest {
                 .build());
         Category testCategory = categoryRepository.findByTitle("test_category").get();
 
-        // 삭제 하기 전 상태 확인
-        assertThat(testCategory.isUseState()).isTrue();
-
         // when
         categoryService.deleteCategory(testCategory.getId());
 
         // then
-        assertThat(testCategory.isUseState()).isFalse();
+        assertThat(categoryRepository.findByTitle("test_category")).isEmpty();
     }
 }

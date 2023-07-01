@@ -67,8 +67,7 @@ public class BoardServiceImpl implements BoardService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
         }
 
-
-        board.setUseState(false);
+        boardRepository.deleteById(boardId);
 
         return createResponse(HttpStatus.OK.value(), "Success delete board");
     }

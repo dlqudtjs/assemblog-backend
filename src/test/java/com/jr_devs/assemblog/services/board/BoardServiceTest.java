@@ -88,13 +88,10 @@ public class BoardServiceTest {
                 .build());
         Board testBoard = boardRepository.findByTitle("test_board").get();
 
-        // 삭제 하기 전 상태 확인
-        assertThat(testBoard.isUseState()).isTrue();
-
         // when
         boardService.deleteBoard(testBoard.getId());
 
         // then
-        assertThat(testBoard.isUseState()).isFalse();
+        assertThat(boardRepository.findByTitle("test_board")).isEmpty();
     }
 }
