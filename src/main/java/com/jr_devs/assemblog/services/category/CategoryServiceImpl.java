@@ -104,9 +104,9 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDtoList;
     }
 
-    private ResponseDto createResponse(int value, String message) {
+    private ResponseDto createResponse(int statusCode, String message) {
         return ResponseDto.builder()
-                .statusCode(value)
+                .statusCode(statusCode)
                 .message(message)
                 .build();
     }
