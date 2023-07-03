@@ -1,10 +1,10 @@
 package com.jr_devs.assemblog.services.board;
 
-import com.jr_devs.assemblog.models.Board;
-import com.jr_devs.assemblog.models.BoardDto;
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.*;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
+import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import com.jr_devs.assemblog.services.boards.BoardService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,29 @@ public class BoardServiceTest {
     @Autowired
     private JpaBoardRepository boardRepository;
 
+    @Autowired
+    private JpaCategoryRepository categoryRepository;
+
+    Category category;
+
+    @BeforeEach
+    public void init() {
+        String categoryTitle = "test_category";
+        int order = Integer.MAX_VALUE;
+
+        category = categoryRepository.save(Category.builder()
+                .title(categoryTitle)
+                .useState(true)
+                .orderNum(order)
+                .build());
+    }
+
     @Test
     @DisplayName("게시판 생성")
     public void createBoard() {
         // when
         ResponseDto responseDto = boardService.createBoard(BoardDto.builder()
-                .parentId(1L)
+                .parentId(category.getId())
                 .title("test_board")
                 .build());
 
@@ -40,15 +57,16 @@ public class BoardServiceTest {
     @DisplayName("같은 부모 카테고리내의 게시판 이름 중복 검사")
     public void DuplicateBoardTitleCheck() {
         // given
+        String boardTitle = "test_category";
         boardService.createBoard(BoardDto.builder()
-                .parentId(1L)
-                .title("test_board")
+                .parentId(category.getId())
+                .title(boardTitle)
                 .build());
 
         // when
         ResponseDto responseDto = boardService.createBoard(BoardDto.builder()
-                .parentId(1L)
-                .title("test_board")
+                .parentId(category.getId())
+                .title(boardTitle)
                 .build());
 
         // then
@@ -59,20 +77,23 @@ public class BoardServiceTest {
     @DisplayName("게시판 title, order, 숨김 수정")
     public void updateBoardTest() {
         // given
+        String boardTitle = "test_board";
         boardService.createBoard(BoardDto.builder()
-                .parentId(1L)
-                .title("test_board")
+                .parentId(category.getId())
+                .title(boardTitle)
                 .build());
-        Board testBoard = boardRepository.findByTitle("test_board").get();
+        Board testBoard = boardRepository.findByTitle(boardTitle).get();
 
         // when
-        testBoard.setTitle("test_board_update");
+        // builder 패턴을 사용하면 값이 변경되지 않음
+        String updateTitle = "test_board_update";
+        testBoard.setTitle(updateTitle);
         testBoard.setUseState(false);
         testBoard.setOrderNum(Integer.MAX_VALUE);
         testBoard.setParentId(Long.MAX_VALUE);
 
         // then
-        assertThat(testBoard.getTitle()).isEqualTo("test_board_update");
+        assertThat(testBoard.getTitle()).isEqualTo(updateTitle);
         assertThat(testBoard.isUseState()).isFalse();
         assertThat(testBoard.getOrderNum()).isEqualTo(Integer.MAX_VALUE);
         assertThat(testBoard.getParentId()).isEqualTo(Long.MAX_VALUE);
@@ -82,16 +103,17 @@ public class BoardServiceTest {
     @DisplayName("게시판 삭제")
     public void deleteBoardTest() {
         // given
+        String boardTitle = "test_board";
         boardService.createBoard(BoardDto.builder()
-                .parentId(1L)
-                .title("test_board")
+                .parentId(category.getId())
+                .title(boardTitle)
                 .build());
-        Board testBoard = boardRepository.findByTitle("test_board").get();
+        Board testBoard = boardRepository.findByTitle(boardTitle).get();
 
         // when
         boardService.deleteBoard(testBoard.getId());
 
         // then
-        assertThat(boardRepository.findByTitle("test_board")).isEmpty();
+        assertThat(boardRepository.findByTitle(boardTitle)).isEmpty();
     }
 }

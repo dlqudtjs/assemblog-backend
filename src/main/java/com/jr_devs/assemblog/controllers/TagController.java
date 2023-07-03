@@ -17,20 +17,15 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping("/api/tags")
-    public ResponseEntity<String> createTag(@RequestBody TagDto tagDto) {
+    public ResponseEntity<String> createTag(@RequestBody List<String> tags) {
         try {
-            ResponseDto responseDto = tagService.createTag(tagDto);
-            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+            for (String tag : tags) {
+                TagDto tagDto = new TagDto();
+                tagDto.setName(tag);
+                tagService.createTag(tagDto);
+            }
 
-    @PatchMapping("/api/tags")
-    public ResponseEntity<String> updateTag(@RequestBody TagDto tagDto) {
-        try {
-            ResponseDto responseDto = tagService.updateTag(tagDto);
-            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
+            return ResponseEntity.ok("Success create tags");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -18,24 +18,17 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public ResponseDto createTag(TagDto tagDto) {
-        Tag.builder()
-                .name(tagDto.getName())
-                .build();
-
-        return createResponse(HttpStatus.OK.value(), "Success create tag");
-    }
-
-    @Override
-    public ResponseDto updateTag(TagDto tagDto) {
         Tag tag = jpaTagRepository.findByName(tagDto.getName());
 
         if (tag != null) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate tag name");
         }
 
-        tag.setName(tagDto.getName());
+        jpaTagRepository.save(Tag.builder()
+                .name(tagDto.getName())
+                .build());
 
-        return createResponse(HttpStatus.OK.value(), "Success update tag");
+        return createResponse(HttpStatus.OK.value(), "Success create tag");
     }
 
     @Override

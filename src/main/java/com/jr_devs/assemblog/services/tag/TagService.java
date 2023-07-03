@@ -12,7 +12,5 @@ public interface TagService {
 
     ResponseDto deleteTag(Long tagId);
 
-    ResponseDto updateTag(TagDto tagDto);
-
     List<Tag> readAllTags();
 }
