@@ -61,7 +61,6 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
 
-
         category.setTitle(categoryDto.getTitle());
         category.setUseState(categoryDto.isUseState());
         category.setOrderNum(categoryDto.getOrderNum());

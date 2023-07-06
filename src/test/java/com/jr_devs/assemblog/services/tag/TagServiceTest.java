@@ -3,7 +3,6 @@ package com.jr_devs.assemblog.services.tag;
 import com.jr_devs.assemblog.models.Tag;
 import com.jr_devs.assemblog.models.TagDto;
 import com.jr_devs.assemblog.repositoryes.JpaTagRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

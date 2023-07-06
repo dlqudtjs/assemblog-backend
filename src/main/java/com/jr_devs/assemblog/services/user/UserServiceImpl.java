@@ -29,13 +29,13 @@ public class UserServiceImpl implements UserService {
     private final HttpServletResponse response;
 
     @Override
-    public ResponseDto login(UserDto UserForm) {
+    public ResponseDto login(UserDto userDto) {
         // 이메일 검사
-        User user = userRepository.findByEmail(UserForm.getEmail())
+        User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found Email"));
 
         // 비밀번호 검사
-        if (!passwordEncoder.matches(UserForm.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Not Match Password");
         }
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
         // 회원가입
         userRepository.save(user);
-        
+
         // 회원가입 성공시 응답
         return ResponseDto.builder()
                 .message("Success signup")

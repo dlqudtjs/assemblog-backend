@@ -6,6 +6,7 @@ import com.jr_devs.assemblog.token.JwtProvider;
 import com.jr_devs.assemblog.token.TokenDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,22 @@ public class TokenTest {
     @Autowired
     private UserService userService;
 
+    private UserDto userDto;
+
+    @BeforeEach
+    public void init() {
+        userDto = new UserDto();
+        userDto.setUsername("test_user");
+        userDto.setEmail("test_user@gmail.com");
+        userDto.setPassword("1234");
+
+        userService.join(userDto);
+    }
+
+
     @Test
     @DisplayName("createAllToken 및 matchingTokenAndEmail 테스트")
     public void matchingTokenAndEmail() {
-        // given
-        UserDto userDto = new UserDto();
-        userDto.setUsername("user1");
-        userDto.setEmail("user1@gmail.com");
-        userDto.setPassword("1234");
-
         // when
         TokenDto tokenDto = jwtProvider.createAllToken(userDto.getEmail());
 
@@ -44,12 +52,6 @@ public class TokenTest {
     @Test
     @DisplayName("jwtProvider.loginLogic 실행시 TokenDto 반환 및 검증 테스트")
     public void createAndValidateTokenTest() {
-        // given
-        UserDto userDto = new UserDto();
-        userDto.setUsername("user1");
-        userDto.setEmail("user1@gmail.com");
-        userDto.setPassword("1234");
-
         // when
         TokenDto tokenDto = jwtProvider.loginLogic(userDto.getEmail());
 

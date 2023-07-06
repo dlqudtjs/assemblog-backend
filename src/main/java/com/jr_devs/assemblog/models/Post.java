@@ -30,11 +30,9 @@ public class Post {
 
     private String title;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+    private String content;
 
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    private String thumbnail;
 
     @Column(name = "post_use_state", columnDefinition = "TINYINT(1)")
     private boolean postUseState;
@@ -46,7 +44,4 @@ public class Post {
     private boolean tempSaveState;
 
     private String preview;
-
-    // todo tag 기능 구현 후 주석 해제
-//    private List<Tag> tags;
 }
