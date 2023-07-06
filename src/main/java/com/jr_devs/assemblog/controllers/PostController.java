@@ -1,10 +1,12 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.PostDto;
-import com.jr_devs.assemblog.models.ResponseDto;
-import com.jr_devs.assemblog.models.Tag;
+import com.jr_devs.assemblog.models.dtos.PostDto;
+import com.jr_devs.assemblog.models.dtos.PostResponseDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,16 @@ public class PostController {
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId) {
+        try {
+            PostResponseDto postResponseDto = postService.readPost(postId);
+            return ResponseEntity.status(postResponseDto.getStatusCode()).body(postResponseDto);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

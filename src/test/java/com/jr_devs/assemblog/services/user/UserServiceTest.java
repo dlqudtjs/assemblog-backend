@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.services.user;
 
-import com.jr_devs.assemblog.models.ResponseDto;
-import com.jr_devs.assemblog.models.UserDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

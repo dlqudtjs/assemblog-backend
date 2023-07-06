@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.ResponseDto;
-import com.jr_devs.assemblog.models.UserDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

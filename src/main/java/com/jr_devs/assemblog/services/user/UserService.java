@@ -1,10 +1,7 @@
 package com.jr_devs.assemblog.services.user;
 
-import com.jr_devs.assemblog.models.ResponseDto;
-import com.jr_devs.assemblog.models.User;
-import com.jr_devs.assemblog.models.UserDto;
-import com.jr_devs.assemblog.token.RefreshToken;
-import jakarta.servlet.http.HttpServletResponse;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.UserDto;
 
 public interface UserService {
     ResponseDto join(UserDto UserForm);

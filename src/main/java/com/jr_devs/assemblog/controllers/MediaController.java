@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.MediaRequestDto;
+import com.jr_devs.assemblog.models.dtos.MediaRequestDto;
 import com.jr_devs.assemblog.services.media.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

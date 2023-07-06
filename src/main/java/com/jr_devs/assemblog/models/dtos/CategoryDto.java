@@ -1,5 +1,6 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.dtos;
 
+import com.jr_devs.assemblog.models.Board;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 

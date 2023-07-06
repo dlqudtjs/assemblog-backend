@@ -1,16 +1,18 @@
 package com.jr_devs.assemblog.services.tag;
 
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.models.Tag;
-import com.jr_devs.assemblog.models.TagDto;
+import com.jr_devs.assemblog.models.dtos.TagDto;
 
 import java.util.List;
 
 public interface TagService {
 
-    ResponseDto createTag(TagDto tagDto);
+    Tag createTag(TagDto tagDto);
 
     ResponseDto deleteTag(Long tagId);
+
+    Tag readTag(Long tagId);
 
     List<Tag> readAllTags();
 }

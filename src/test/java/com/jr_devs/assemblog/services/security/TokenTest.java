@@ -1,11 +1,9 @@
 package com.jr_devs.assemblog.services.security;
 
-import com.jr_devs.assemblog.models.UserDto;
+import com.jr_devs.assemblog.models.dtos.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
 import com.jr_devs.assemblog.token.JwtProvider;
 import com.jr_devs.assemblog.token.TokenDto;
-import jakarta.servlet.http.HttpServletResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

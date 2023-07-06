@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.dtos;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseDto {
-    
+
     private String message;
     private int statusCode;
 }

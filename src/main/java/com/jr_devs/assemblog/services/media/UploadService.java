@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.services.media;
 
-import com.jr_devs.assemblog.models.MediaRequestDto;
+import com.jr_devs.assemblog.models.dtos.MediaRequestDto;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.CategoryDto;
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.CategoryDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

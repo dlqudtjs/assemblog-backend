@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.category;
 
 import com.jr_devs.assemblog.models.Category;
-import com.jr_devs.assemblog.models.CategoryDto;
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.CategoryDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

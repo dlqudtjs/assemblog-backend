@@ -1,6 +1,8 @@
 package com.jr_devs.assemblog.services.board;
 
 import com.jr_devs.assemblog.models.*;
+import com.jr_devs.assemblog.models.dtos.BoardDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import com.jr_devs.assemblog.services.boards.BoardService;

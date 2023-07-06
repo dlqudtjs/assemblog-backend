@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.dtos;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

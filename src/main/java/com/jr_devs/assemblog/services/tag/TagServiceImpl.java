@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.tag;
 
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.models.Tag;
-import com.jr_devs.assemblog.models.TagDto;
+import com.jr_devs.assemblog.models.dtos.TagDto;
 import com.jr_devs.assemblog.repositoryes.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,18 +17,21 @@ public class TagServiceImpl implements TagService {
     private final JpaTagRepository jpaTagRepository;
 
     @Override
-    public ResponseDto createTag(TagDto tagDto) {
+    public Tag createTag(TagDto tagDto) {
         Tag tag = jpaTagRepository.findByName(tagDto.getName());
 
         if (tag != null) {
-            return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate tag name");
+            return tag;
         }
 
-        jpaTagRepository.save(Tag.builder()
+        return jpaTagRepository.save(Tag.builder()
                 .name(tagDto.getName())
                 .build());
+    }
 
-        return createResponse(HttpStatus.OK.value(), "Success create tag");
+    @Override
+    public Tag readTag(Long tagId) {
+        return jpaTagRepository.findById(tagId).orElse(null);
     }
 
     @Override
@@ -38,6 +41,7 @@ public class TagServiceImpl implements TagService {
         return createResponse(HttpStatus.OK.value(), "Success delete tag");
     }
 
+    // todo 임시 저장에서 생성된 태그가 아닌 태그만 조회
     @Override
     public List<Tag> readAllTags() {
         return jpaTagRepository.findAllByOrderByNameAsc();

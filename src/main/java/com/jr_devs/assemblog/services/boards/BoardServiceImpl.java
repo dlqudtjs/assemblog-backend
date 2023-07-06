@@ -1,9 +1,8 @@
 package com.jr_devs.assemblog.services.boards;
 
 import com.jr_devs.assemblog.models.Board;
-import com.jr_devs.assemblog.models.BoardDto;
-import com.jr_devs.assemblog.models.Category;
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.BoardDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

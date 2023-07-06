@@ -1,12 +1,11 @@
 package com.jr_devs.assemblog.services.user;
 
-import com.jr_devs.assemblog.models.ResponseDto;
+import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.models.User;
-import com.jr_devs.assemblog.models.UserDto;
+import com.jr_devs.assemblog.models.dtos.UserDto;
 import com.jr_devs.assemblog.repositoryes.JpaRefreshTokenRepository;
 import com.jr_devs.assemblog.repositoryes.JpaUserRepository;
 import com.jr_devs.assemblog.token.JwtProvider;
-import com.jr_devs.assemblog.token.RefreshToken;
 import com.jr_devs.assemblog.token.TokenDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
