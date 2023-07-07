@@ -82,6 +82,17 @@ public class CategoryServiceImpl implements CategoryService {
         return createResponse(HttpStatus.OK.value(), "Success delete category");
     }
 
+    @Override
+    public String getCategoryTitle(Long id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+
+        if (category == null) {
+            return null;
+        }
+
+        return category.getTitle();
+    }
+
     public List<CategoryDto> readAllCategoriesAndBoards() {
         List<CategoryDto> categoryDtoList = new ArrayList<>();
         List<Category> categories = readAllCategories();

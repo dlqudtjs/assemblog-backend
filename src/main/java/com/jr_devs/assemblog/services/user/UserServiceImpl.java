@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final JpaUserRepository userRepository;
-    private final JpaRefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final HttpServletResponse response;
@@ -44,6 +43,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseDto(user.getEmail(), HttpStatus.OK.value());
     }
 
+    @Override
     public ResponseDto join(UserDto userDto) {
         this.checkDuplicate(userDto);
 
@@ -61,6 +61,11 @@ public class UserServiceImpl implements UserService {
                 .message("Success signup")
                 .statusCode(HttpStatus.OK.value()) // int 형이기 때문에 value()를 사용해야 한다.
                 .build();
+    }
+
+    @Override
+    public String getUsernameByEmail(String email) {
+        return userRepository.findByEmail(email).get().getUsername();
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {

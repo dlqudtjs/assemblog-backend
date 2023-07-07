@@ -1,12 +1,11 @@
 package com.jr_devs.assemblog.controllers;
 
 import com.jr_devs.assemblog.models.dtos.PostDto;
+import com.jr_devs.assemblog.models.dtos.PostListResponseDto;
 import com.jr_devs.assemblog.models.dtos.PostResponseDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.post.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +37,21 @@ public class PostController {
         try {
             PostResponseDto postResponseDto = postService.readPost(postId);
             return ResponseEntity.status(postResponseDto.getStatusCode()).body(postResponseDto);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/lists/posts")
+    public ResponseEntity<PostListResponseDto> readPostList(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "15") int pageSize,
+            @RequestParam(required = false, defaultValue = "created_at") String order,
+            @RequestParam(required = false, defaultValue = "desc") String orderType,
+            @RequestParam(required = false, defaultValue = "0") int boardId) {
+        try {
+            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardId);
+            return ResponseEntity.status(postListResponseDto.getStatusCode()).body(postListResponseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }

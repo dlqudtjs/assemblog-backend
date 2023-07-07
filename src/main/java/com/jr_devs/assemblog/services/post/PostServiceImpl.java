@@ -1,14 +1,14 @@
 package com.jr_devs.assemblog.services.post;
 
 import com.jr_devs.assemblog.models.*;
-import com.jr_devs.assemblog.models.dtos.PostDto;
-import com.jr_devs.assemblog.models.dtos.PostResponseDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
-import com.jr_devs.assemblog.models.dtos.TagDto;
+import com.jr_devs.assemblog.models.dtos.*;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
+import com.jr_devs.assemblog.services.boards.BoardService;
 import com.jr_devs.assemblog.services.tag.PostTagService;
 import com.jr_devs.assemblog.services.tag.TagService;
+import com.jr_devs.assemblog.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,8 @@ public class PostServiceImpl implements PostService {
     private final JpaPostRepository postRepository;
     private final TagService tagService;
     private final PostTagService postTagService;
+    private final BoardService boardService;
+    private final UserService userService;
 
     /*
      * 작성 시 같은 제목의 임시 저장 글이 있으면 삭제한다.
@@ -120,7 +122,9 @@ public class PostServiceImpl implements PostService {
                     .build();
         }
 
+        // 게시글의 태그 목록 가져오기
         List<PostTag> postTags = postTagService.getPostTagsByPostId(postId);
+        // 태그 Id 목록을 태그 이름 목록으로 변환
         List<String> tagList = new ArrayList<>();
         for (PostTag postTag : postTags) {
             tagList.add(tagService.readTag(postTag.getTagId()).getName());
@@ -128,10 +132,18 @@ public class PostServiceImpl implements PostService {
 
         return PostResponseDto.builder()
                 .postId(post.getId())
-                .username(post.getWriterMail())
+                .username(userService.getUsernameByEmail(post.getWriterMail()))
                 .title(post.getTitle())
-                .thumbnail(post.getThumbnail())
                 .content(post.getContent())
+                .thumbnail(post.getThumbnail())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .postUseState(post.isPostUseState())
+                .commentUseState(post.isCommentUseState())
+                .tempSaveState(post.isTempSaveState())
+                .categoryTitle(boardService.getCategoryTitleByBoardId(post.getBoardId()))
+                .boardTitle(boardService.getBoardTitle(post.getBoardId()))
+                .viewCount(0)
                 .tagList(tagList)
                 .statusCode(HttpStatus.OK.value())
                 .message("Success read post")
@@ -176,6 +188,46 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
 
         return createResponse(HttpStatus.OK.value(), "Success delete post");
+    }
+
+    @Override
+    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int boardId) {
+        int pageStartIndex = (currentPage - 1) * pageSize;
+
+        List<Post> postList;
+
+        if (boardId == 0) {
+            // todo sort 안 됨 ㅅㅂ
+            postList = postRepository.findAllPostList(pageStartIndex, pageSize, Sort.by("created_at").ascending());
+        } else {
+            postList = postRepository.findPostListByBoardId(pageStartIndex, pageSize, order, orderType, boardId);
+        }
+
+        List<PostListResponse> postListResponse = new ArrayList<>();
+        for (Post post : postList) {
+            postListResponse.add(PostListResponse.builder()
+                    .postId(post.getId())
+                    .username(userService.getUsernameByEmail(post.getWriterMail()))
+                    .title(post.getTitle())
+                    .thumbnail(post.getThumbnail())
+                    .preview(post.getPreview())
+                    .createdAt(post.getCreatedAt())
+                    .updatedAt(post.getUpdatedAt())
+                    .categoryTitle(boardService.getCategoryTitleByBoardId(post.getBoardId()))
+                    .boardTitle(boardService.getBoardTitle(post.getBoardId()))
+                    .viewCount(0)
+                    .likeCount(0)
+                    .commentCount(0)
+                    .build());
+        }
+
+        return PostListResponseDto.builder()
+                .totalPage(postList.size())
+                .currentPage(currentPage)
+                .postList(postListResponse)
+                .statusCode(HttpStatus.OK.value())
+                .message("Success read post list")
+                .build();
     }
 
     private List<Post> getTempSavePosts(String writerMail, boolean tempSaveState) {

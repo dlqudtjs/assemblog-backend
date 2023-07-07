@@ -29,6 +29,6 @@ public class PostResponseDto {
     private List<String> tagList;
 
     // for error
-    private String message;
     private int statusCode;
+    private String message;
 }

@@ -17,4 +17,6 @@ public interface CategoryService {
     ResponseDto updateCategory(CategoryDto categoryDto);
 
     ResponseDto deleteCategory(Long categoryId);
+
+    String getCategoryTitle(Long id);
 }

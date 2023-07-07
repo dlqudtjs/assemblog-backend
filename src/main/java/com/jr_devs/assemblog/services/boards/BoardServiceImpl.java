@@ -1,9 +1,11 @@
 package com.jr_devs.assemblog.services.boards;
 
 import com.jr_devs.assemblog.models.Board;
+import com.jr_devs.assemblog.models.Category;
 import com.jr_devs.assemblog.models.dtos.BoardDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
+import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final JpaBoardRepository boardRepository;
+    private final JpaCategoryRepository categoryRepository;
 
     @Override
     public ResponseDto createBoard(BoardDto boardDto) {
@@ -74,6 +77,31 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Board> readAllByParentId(Long parentId) {
         return boardRepository.findAllByParentId(parentId);
+    }
+
+    @Override
+    public String getCategoryTitleByBoardId(Long id) {
+        // boardId를 통해 parentId를 찾는다.
+        Long parentId = boardRepository.findById(id).orElse(null).getParentId();
+        // parentId를 통해 categoryTitle 를 찾는다.
+        Category category = categoryRepository.findById(parentId).orElse(null);
+
+        if (category == null) {
+            return null;
+        }
+
+        return category.getTitle();
+    }
+
+    @Override
+    public String getBoardTitle(Long id) {
+        Board board = boardRepository.findById(id).orElse(null);
+
+        if (board == null) {
+            return null;
+        }
+
+        return board.getTitle();
     }
 
     private Long getBoardOrder() {

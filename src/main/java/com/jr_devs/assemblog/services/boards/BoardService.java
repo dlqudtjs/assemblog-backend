@@ -16,4 +16,7 @@ public interface BoardService {
 
     List<Board> readAllByParentId(Long id);
 
+    String getCategoryTitleByBoardId(Long boardId);
+
+    String getBoardTitle(Long id);
 }

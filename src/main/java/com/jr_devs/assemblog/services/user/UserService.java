@@ -7,4 +7,6 @@ public interface UserService {
     ResponseDto join(UserDto UserForm);
 
     ResponseDto login(UserDto UserForm);
+
+    String getUsernameByEmail(String email);
 }
