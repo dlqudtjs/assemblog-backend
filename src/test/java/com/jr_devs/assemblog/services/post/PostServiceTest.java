@@ -104,4 +104,23 @@ public class PostServiceTest {
 
         assertThat(isExist).isTrue();
     }
+
+    @Test
+    @DisplayName("게시글 수정")
+    public void updatePost() {
+        // given
+        postService.createPost(postDto);
+        List<Post> posts = postRepository.findByWriterMailAndTitle(postDto.getWriterMail(), postDto.getTitle());
+        Post post = posts.get(0);
+
+        // when
+        postDto.setContent("test_edit_content");
+
+        // 덮어쓰기 때문에 post 의 id 를 넣어줘야 한다.
+        postDto.setId(post.getId());
+        postService.updatePost(postDto);
+
+        // then
+        assertThat(postRepository.findById(post.getId()).get().getContent()).isEqualTo("test_edit_content");
+    }
 }

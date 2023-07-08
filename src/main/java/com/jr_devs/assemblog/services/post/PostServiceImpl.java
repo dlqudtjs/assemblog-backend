@@ -8,7 +8,6 @@ import com.jr_devs.assemblog.services.tag.PostTagService;
 import com.jr_devs.assemblog.services.tag.TagService;
 import com.jr_devs.assemblog.services.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,7 @@ public class PostServiceImpl implements PostService {
     public ResponseDto createPost(PostDto postDto) {
         Post post = buildPost(postDto);
 
-        List<Post> tempSavePost = getTempSavePosts(postDto.getWriterMail(), true);
+        List<Post> tempSavePost = getTempSavePosts(postDto.getWriterMail());
 
         System.out.println(tempSavePost.size());
 
@@ -78,14 +77,7 @@ public class PostServiceImpl implements PostService {
             savedPost = postRepository.save(buildPost(postDto));
         } else { // 같은 제목의 임시 저장 글이 있을 때,
             // 임시 저장 글 덮어쓰기
-            findPost.setBoardId(postDto.getBoardId());
-            findPost.setTitle(postDto.getTitle());
-            findPost.setContent(postDto.getContent());
-            findPost.setThumbnail(postDto.getThumbnail());
-            findPost.setPostUseState(postDto.isPostUseState());
-            findPost.setCommentUseState(postDto.isCommentUseState());
-            findPost.setTempSaveState(postDto.isTempSaveState());
-            findPost.setPreview(postDto.getPreview());
+            overwritePost(findPost, postDto);
 
             // 기존 태그 모두 삭제
             List<PostTag> postTags = postTagService.getPostTagsByPostId(findPost.getId());
@@ -111,6 +103,7 @@ public class PostServiceImpl implements PostService {
         return createResponse(HttpStatus.OK.value(), "Success temp save post");
     }
 
+    // 게시글 조회
     @Override
     public PostResponseDto readPost(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
@@ -154,10 +147,21 @@ public class PostServiceImpl implements PostService {
      * 덮어쓰기를 할 때 기존의 태그를 모두 삭제한 후 새로운 태그를 붙인다. (덮어쓰기)
      * 업데이트 시 기존의 태그를 모두 삭제한 후 새로운 태그를 붙인다. (덮어쓰기)
      */
-    // todo 덮어쓰기 부분을 재활용할 수 있을 것 같다.
     @Override
     public ResponseDto updatePost(PostDto postDto) {
-        return null;
+        Post findPost = postRepository.findById(postDto.getId()).orElse(null);
+
+        if (findPost == null) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist post");
+        }
+
+        // 게시글 덮어쓰기
+        overwritePost(findPost, postDto);
+
+        // 게시글과 태그 연결 삭제
+        deleteTags(postDto.getId());
+
+        return createResponse(HttpStatus.OK.value(), "Success update post");
     }
 
     /*
@@ -171,37 +175,23 @@ public class PostServiceImpl implements PostService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist post");
         }
 
-        // 삭제되는 태그 목록
-        List<PostTag> postTags = postTagService.getPostTagsByPostId(postId);
-
-        // 1. 게시글과 태그 연결 삭제
-        // 2. 태그가 더이상 참조하는 게시글이 없으면 태그 자체를 삭제
-        for (PostTag postTag : postTags) {
-            postTagService.deletePostTag(postTag.getPostId(), postTag.getTagId());
-
-            // 태그가 더이상 참조하는 게시글이 없으면 태그 자체를 삭제
-            if (postTagService.getPostTagsByTagId(postTag.getTagId()).size() == 0) {
-                tagService.deleteTag(postTag.getTagId());
-            }
-        }
+        // 게시글과 태그 연결 삭제
+        deleteTags(postId);
 
         postRepository.deleteById(postId);
 
         return createResponse(HttpStatus.OK.value(), "Success delete post");
     }
 
+    // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
-    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int boardId) {
+    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int searchType) {
+        currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
         List<Post> postList;
 
-        if (boardId == 0) {
-            // todo sort 안 됨 ㅅㅂ
-            postList = postRepository.findAllPostList(pageStartIndex, pageSize, Sort.by("created_at").ascending());
-        } else {
-            postList = postRepository.findPostListByBoardId(pageStartIndex, pageSize, order, orderType, boardId);
-        }
+        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, searchType);
 
         List<PostListResponse> postListResponse = new ArrayList<>();
         for (Post post : postList) {
@@ -230,8 +220,38 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
-    private List<Post> getTempSavePosts(String writerMail, boolean tempSaveState) {
-        return postRepository.findByWriterMailAndTempSaveState(writerMail, tempSaveState);
+    // 태그를 삭제하며 태그가 더이상 참조하는 게시글이 없으면 태그 자체를 삭제한다.
+    private void deleteTags(Long postId) {
+        List<PostTag> postTags = postTagService.getPostTagsByPostId(postId);
+
+        // 1. 게시글과 태그 연결 삭제
+        for (PostTag postTag : postTags) {
+            postTagService.deletePostTag(postTag.getPostId(), postTag.getTagId());
+        }
+
+        // 2. 태그가 더이상 참조하는 게시글이 없으면 태그 자체를 삭제
+        for (PostTag postTag : postTags) {
+            if (postTagService.getPostTagsByTagId(postTag.getTagId()).size() == 0) {
+                tagService.deleteTag(postTag.getTagId());
+            }
+        }
+    }
+
+    // 게시글 덮어쓰기
+    private void overwritePost(Post findPost, PostDto postDto) {
+        findPost.setBoardId(postDto.getBoardId());
+        findPost.setTitle(postDto.getTitle());
+        findPost.setContent(postDto.getContent());
+        findPost.setThumbnail(postDto.getThumbnail());
+        findPost.setPostUseState(postDto.isPostUseState());
+        findPost.setCommentUseState(postDto.isCommentUseState());
+        findPost.setTempSaveState(postDto.isTempSaveState());
+        findPost.setPreview(postDto.getPreview());
+    }
+
+    // 사용자가 임시저장한 게시글 목록 조회
+    private List<Post> getTempSavePosts(String writerMail) {
+        return postRepository.findByWriterMailAndTempSaveState(writerMail, true);
     }
 
     private ResponseDto createResponse(int statusCode, String message) {

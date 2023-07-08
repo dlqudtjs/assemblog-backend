@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDto {
+    private Long id;
+
     private Long boardId;
 
     private String writerMail;

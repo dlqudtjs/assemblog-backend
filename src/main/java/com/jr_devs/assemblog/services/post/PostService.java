@@ -17,5 +17,5 @@ public interface PostService {
 
     ResponseDto deletePost(Long postId);
 
-    PostListResponseDto readPostList(int pageStartIndex, int pageEndIndex, String order, String orderType, int boardId);
+    PostListResponseDto readPostList(int pageStartIndex, int pageEndIndex, String order, String orderType, int searchType);
 }

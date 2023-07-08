@@ -23,25 +23,13 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
             "WHERE post_use_state = 1 AND temp_save_state = 0 " +
             "LIMIT :page_start_index, :page_size";
 
-    @Query(value = SELECT_ALL_POST_LIST, nativeQuery = true)
-    List<Post> findAllPostList(@Param("page_start_index") int pageStartIndex,
-                               @Param("page_size") int pageSize,
-                               Sort sort);
+    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :order, :order_type, :search_type)", nativeQuery = true)
+    List<Post> findPostList(@Param("page_start_index") int pageStartIndex,
+                            @Param("page_size") int pageSize,
+                            @Param("order") String order,
+                            @Param("order_type") String orderType,
+                            @Param("search_type") int searchType);
 
-
-    // board id로 post list 가져오기
-    public static final String SELECT_POST_LIST_BY_BOARD = "SELECT * " +
-            "FROM post " +
-            "WHERE board_id = :board_id AND post_use_state = 1 AND temp_save_state = 0 " +
-            "ORDER BY :order :order_type " +
-            "LIMIT :page_start_index, :page_size";
-
-    @Query(value = SELECT_POST_LIST_BY_BOARD, nativeQuery = true)
-    List<Post> findPostListByBoardId(@Param("page_start_index") int pageStartIndex,
-                                     @Param("page_size") int pageSize,
-                                     @Param("order") String order,
-                                     @Param("order_type") String orderType,
-                                     @Param("board_id") int boardId);
 
     void deleteByTitle(String title);
 
