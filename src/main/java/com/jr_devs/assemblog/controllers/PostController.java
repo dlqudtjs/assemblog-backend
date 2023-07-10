@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.PostDto;
-import com.jr_devs.assemblog.models.dtos.PostListResponseDto;
-import com.jr_devs.assemblog.models.dtos.PostResponseDto;
+import com.jr_devs.assemblog.models.dtos.post.PostDto;
+import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
+import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/api/posts")
-    public ResponseEntity<String> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<String> createPost(@RequestBody PostDto postDto, @RequestHeader("accesstoken") String token) {
         try {
             ResponseDto responseDto;
             // 임시 저장
             if (postDto.isTempSaveState()) {
-                responseDto = postService.tempSavePost(postDto);
+                responseDto = postService.tempSavePost(postDto, token);
             } else {
                 // 게시글 등록
                 responseDto = postService.createPost(postDto);
@@ -58,9 +58,9 @@ public class PostController {
     }
 
     @PatchMapping("/api/posts")
-    public ResponseEntity<String> updatePost(@RequestBody PostDto postDto) {
+    public ResponseEntity<String> updatePost(@RequestBody PostDto postDto, @RequestHeader("accesstoken") String token) {
         try {
-            ResponseDto responseDto = postService.updatePost(postDto);
+            ResponseDto responseDto = postService.updatePost(postDto, token);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,9 +68,9 @@ public class PostController {
     }
 
     @DeleteMapping("/api/posts/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+    public ResponseEntity<String> deletePost(@PathVariable Long postId, @RequestHeader("accesstoken") String token) {
         try {
-            ResponseDto responseDto = postService.deletePost(postId);
+            ResponseDto responseDto = postService.deletePost(postId, token);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

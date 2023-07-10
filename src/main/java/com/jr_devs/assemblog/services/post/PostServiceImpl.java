@@ -2,11 +2,15 @@ package com.jr_devs.assemblog.services.post;
 
 import com.jr_devs.assemblog.models.*;
 import com.jr_devs.assemblog.models.dtos.*;
+import com.jr_devs.assemblog.models.dtos.post.PostDto;
+import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
+import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
-import com.jr_devs.assemblog.services.boards.BoardService;
+import com.jr_devs.assemblog.services.board.BoardService;
 import com.jr_devs.assemblog.services.tag.PostTagService;
 import com.jr_devs.assemblog.services.tag.TagService;
 import com.jr_devs.assemblog.services.user.UserService;
+import com.jr_devs.assemblog.token.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ public class PostServiceImpl implements PostService {
     private final PostTagService postTagService;
     private final BoardService boardService;
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     /*
      * 작성 시 같은 제목의 임시 저장 글이 있으면 삭제한다.
@@ -69,13 +74,18 @@ public class PostServiceImpl implements PostService {
      * 모두 삭제할 때, 태그가 더이상 참조하는 게시글이 없을 경우 태그 자체를 삭제한다.
      */
     @Override
-    public ResponseDto tempSavePost(PostDto postDto) {
+    public ResponseDto tempSavePost(PostDto postDto, String token) {
         Post findPost = postRepository.findByWriterMailAndTitleAndTempSaveState(postDto.getWriterMail(), postDto.getTitle(), true);
         Post savedPost = null;
 
         if (findPost == null) {
             savedPost = postRepository.save(buildPost(postDto));
         } else { // 같은 제목의 임시 저장 글이 있을 때,
+            // 토큰 내 작성자와 임시 저장 글의 작성자가 같은지 검사
+            if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+                return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
+            }
+
             // 임시 저장 글 덮어쓰기
             overwritePost(findPost, postDto);
 
@@ -126,6 +136,7 @@ public class PostServiceImpl implements PostService {
         return PostResponseDto.builder()
                 .postId(post.getId())
                 .username(userService.getUsernameByEmail(post.getWriterMail()))
+                .writerMail(post.getWriterMail())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
@@ -148,11 +159,16 @@ public class PostServiceImpl implements PostService {
      * 업데이트 시 기존의 태그를 모두 삭제한 후 새로운 태그를 붙인다. (덮어쓰기)
      */
     @Override
-    public ResponseDto updatePost(PostDto postDto) {
+    public ResponseDto updatePost(PostDto postDto, String token) {
         Post findPost = postRepository.findById(postDto.getId()).orElse(null);
 
         if (findPost == null) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist post");
+        }
+
+        // 토큰 내 작성자와 게시글의 작성자가 같은지 검사
+        if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+            return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
         }
 
         // 게시글 덮어쓰기
@@ -161,6 +177,17 @@ public class PostServiceImpl implements PostService {
         // 게시글과 태그 연결 삭제
         deleteTags(postDto.getId());
 
+        // 태그 새로 붙이기
+        for (String tagName : postDto.getTags()) {
+            // 붙은 태그 생성 (이미 생성된 태그 중복 검사 실시)
+            Tag tag = tagService.createTag(TagDto.builder()
+                    .name(tagName)
+                    .build());
+
+            // 게시글과 태그 연결 (게시글 내 태그 중복 검사)
+            postTagService.createPostTag(postDto.getId(), tag.getId());
+        }
+
         return createResponse(HttpStatus.OK.value(), "Success update post");
     }
 
@@ -168,11 +195,16 @@ public class PostServiceImpl implements PostService {
      * 게시글 삭제 시 태그가 더이상 참조 하는 게시글이 없으면 태그 자체를 삭제한다.
      */
     @Override
-    public ResponseDto deletePost(Long postId) {
+    public ResponseDto deletePost(Long postId, String token) {
         Post findPost = postRepository.findById(postId).orElse(null);
 
         if (findPost == null) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist post");
+        }
+
+        // 토큰 내 작성자와 삭제할 게시글의 작성자가 같은지 검사
+        if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+            return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
         }
 
         // 게시글과 태그 연결 삭제

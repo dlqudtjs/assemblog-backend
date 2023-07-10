@@ -50,15 +50,4 @@ public class TagController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
-    // todo 페이징 처리 구현하기
-//    @GetMapping("/api/tags/{tagId}")
-//    public ResponseEntity<Tag> readTag(@PathVariable Long tagId) {
-//        try {
-//            Tag tag = tagService.readTag(tagId);
-//            return ResponseEntity.ok(tag);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
 }

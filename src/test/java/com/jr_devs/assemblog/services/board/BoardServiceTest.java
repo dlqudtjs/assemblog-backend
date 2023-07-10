@@ -5,7 +5,6 @@ import com.jr_devs.assemblog.models.dtos.BoardDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
-import com.jr_devs.assemblog.services.boards.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

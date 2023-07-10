@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.services.boards;
+package com.jr_devs.assemblog.services.board;
 
 import com.jr_devs.assemblog.models.Board;
 import com.jr_devs.assemblog.models.dtos.BoardDto;

@@ -5,7 +5,7 @@ import com.jr_devs.assemblog.models.Category;
 import com.jr_devs.assemblog.models.dtos.CategoryDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
-import com.jr_devs.assemblog.services.boards.BoardService;
+import com.jr_devs.assemblog.services.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

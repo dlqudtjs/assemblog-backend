@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models.dtos;
+package com.jr_devs.assemblog.models.dtos.post;
 
 import com.jr_devs.assemblog.models.Tag;
 import lombok.*;
@@ -15,6 +15,7 @@ public class PostResponseDto {
 
     private Long postId;
     private String username;
+    private String writerMail;
     private String title;
     private String content;
     private String thumbnail;
