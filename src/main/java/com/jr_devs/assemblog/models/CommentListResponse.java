@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentListResponse {
 
+    private Long id;
+
     private String nickname;
 
     private String content;

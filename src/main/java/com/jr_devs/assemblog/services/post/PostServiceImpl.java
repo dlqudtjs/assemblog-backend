@@ -7,6 +7,7 @@ import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
 import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
 import com.jr_devs.assemblog.services.board.BoardService;
+import com.jr_devs.assemblog.services.comment.CommentService;
 import com.jr_devs.assemblog.services.tag.PostTagService;
 import com.jr_devs.assemblog.services.tag.TagService;
 import com.jr_devs.assemblog.services.user.UserService;
@@ -31,6 +32,7 @@ public class PostServiceImpl implements PostService {
     private final BoardService boardService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final CommentService commentService;
 
     /*
      * 작성 시 같은 제목의 임시 저장 글이 있으면 삭제한다.
@@ -239,7 +241,7 @@ public class PostServiceImpl implements PostService {
                     .boardTitle(boardService.getBoardTitle(post.getBoardId()))
                     .viewCount(0)
                     .likeCount(0)
-                    .commentCount(0)
+                    .commentCount(commentService.getCommentCount(post.getId()))
                     .build());
         }
 

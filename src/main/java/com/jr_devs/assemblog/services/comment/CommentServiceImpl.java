@@ -66,6 +66,7 @@ public class CommentServiceImpl implements CommentService {
         ArrayList<CommentListResponse> commentListResponse = new ArrayList<>();
         for (Comment comment : commentList) {
             commentListResponse.add(CommentListResponse.builder()
+                    .id(comment.getId())
                     .nickname(comment.getNickname())
                     .content(comment.getContent())
                     .parentCommentId(comment.getParentCommentId())
@@ -80,6 +81,24 @@ public class CommentServiceImpl implements CommentService {
                 .statusCode(HttpStatus.OK.value())
                 .message("Success read comment list")
                 .build();
+    }
+
+    @Override
+    public ResponseDto likeComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+
+        if (comment == null) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Comment not found");
+        }
+
+        comment.setLikeState(!comment.isLikeState());
+
+        return createResponse(HttpStatus.OK.value(), "Success like comment");
+    }
+
+    @Override
+    public int getCommentCount(Long postId) {
+        return commentRepository.countAllByPostId(postId);
     }
 
     private ResponseDto createResponse(int statusCode, String message) {

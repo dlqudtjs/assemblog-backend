@@ -11,4 +11,8 @@ public interface CommentService {
     CommentListResponseDto readCommentList(Long postId);
 
     ResponseDto deleteComment(Long commentId, String password);
+
+    int getCommentCount(Long postId);
+
+    ResponseDto likeComment(Long commentId);
 }

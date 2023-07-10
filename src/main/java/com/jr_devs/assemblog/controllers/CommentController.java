@@ -34,7 +34,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/comments")
+    @GetMapping("/lists/comments")
     public ResponseEntity<CommentListResponseDto> readAllComments(@RequestParam Long postId) {
         try {
             System.out.println("postId: " + postId);
@@ -42,6 +42,16 @@ public class CommentController {
             return ResponseEntity.status(commentListResponseDto.getStatusCode()).body(commentListResponseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PatchMapping("/api/comments/likes/{commentId}")
+    public ResponseEntity<String> likeComment(@PathVariable Long commentId) {
+        try {
+            ResponseDto responseDto = commentService.likeComment(commentId);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
