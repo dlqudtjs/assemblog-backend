@@ -84,7 +84,7 @@ public class PostServiceImpl implements PostService {
             savedPost = postRepository.save(buildPost(postDto));
         } else { // 같은 제목의 임시 저장 글이 있을 때,
             // 토큰 내 작성자와 임시 저장 글의 작성자가 같은지 검사
-            if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+            if (!jwtProvider.getEmailFromToken(token).equals(findPost.getWriterMail())) {
                 return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
             }
 
@@ -169,7 +169,7 @@ public class PostServiceImpl implements PostService {
         }
 
         // 토큰 내 작성자와 게시글의 작성자가 같은지 검사
-        if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+        if (!jwtProvider.getEmailFromToken(token).equals(findPost.getWriterMail())) {
             return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
         }
 
@@ -205,7 +205,7 @@ public class PostServiceImpl implements PostService {
         }
 
         // 토큰 내 작성자와 삭제할 게시글의 작성자가 같은지 검사
-        if (!jwtProvider.matchingTokenAndEmail(token, findPost.getWriterMail())) {
+        if (!jwtProvider.getEmailFromToken(token).equals(findPost.getWriterMail())) {
             return createResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
         }
 

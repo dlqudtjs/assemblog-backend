@@ -25,9 +25,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments")
-    public ResponseEntity<String> deleteComment(@RequestParam Long commentId, @RequestParam String password) {
+    public ResponseEntity<String> deleteComment(@RequestParam Long id, @RequestParam String password) {
         try {
-            ResponseDto responseDto = commentService.deleteComment(commentId, password);
+            ResponseDto responseDto = commentService.deleteComment(id, password);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

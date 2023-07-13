@@ -3,7 +3,7 @@ package com.jr_devs.assemblog.configurations;
 import com.jr_devs.assemblog.exceptions.CustomExceptionHandler;
 import com.jr_devs.assemblog.token.JwtAccessDeniedHandler;
 import com.jr_devs.assemblog.token.JwtAuthenticationEntryPoint;
-import com.jr_devs.assemblog.token.JwtAuthenticationFilter;
+//import com.jr_devs.assemblog.token.JwtAuthenticationFilter;
 import com.jr_devs.assemblog.token.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -41,23 +41,24 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 // 권한 설정 시작 (URL 관리)
-                .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests
-                            // "/users/signup", "/users/login" 은 누구나 접근 가능
-                            .requestMatchers("/users/signup", "/users/login").permitAll()
-                            .requestMatchers("/*").permitAll()
-                            .requestMatchers("/*/*").permitAll()
-                            // api 로 시작하는 경로는 인증이 필요함
-                            .requestMatchers("/api/**").authenticated();
-                })
+//                .authorizeHttpRequests((authorizeRequests) -> {
+//                    authorizeRequests
+//                            // "/users/signup", "/users/login" 은 누구나 접근 가능
+//                            .requestMatchers("/users/signup", "/users/login").permitAll()
+//                            .requestMatchers("/*").permitAll()
+//                            .requestMatchers("/*/*").permitAll()
+//                            // api 로 시작하는 경로는 인증이 필요함
+//                            .requestMatchers("/api/**").authenticated();
+//                })
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(accessDeniedHandler)
-                )
-                // 지정된 필터 앞에 커스텀 필터를 추가 (UsernamePasswordAuthenticationFilter 보다 먼저 실행된다)
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, customExceptionHandler),
-                        UsernamePasswordAuthenticationFilter.class);
+                );
+
+        // 지정된 필터 앞에 커스텀 필터를 추가 (UsernamePasswordAuthenticationFilter 보다 먼저 실행된다)
+//                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, customExceptionHandler),
+//                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

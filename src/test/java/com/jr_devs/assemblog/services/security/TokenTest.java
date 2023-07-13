@@ -54,7 +54,7 @@ public class TokenTest {
         TokenDto tokenDto = jwtProvider.loginLogic(userDto.getEmail());
 
         // then
-        assertThat(jwtProvider.validateAccessToken(tokenDto.getAccessToken())).isTrue();
+        assertThat(jwtProvider.validateToken(tokenDto.getAccessToken())).isTrue();
         assertThat(jwtProvider.validateRefreshToken(tokenDto.getRefreshToken())).isTrue();
     }
 }
