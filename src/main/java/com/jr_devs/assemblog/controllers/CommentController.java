@@ -37,7 +37,6 @@ public class CommentController {
     @GetMapping("/lists/comments")
     public ResponseEntity<CommentListResponseDto> readAllComments(@RequestParam Long postId) {
         try {
-            System.out.println("postId: " + postId);
             CommentListResponseDto commentListResponseDto = commentService.readCommentList(postId);
             return ResponseEntity.status(commentListResponseDto.getStatusCode()).body(commentListResponseDto);
         } catch (Exception e) {

@@ -38,5 +38,6 @@ public class Comment {
     @CreationTimestamp
     private String createdAt;
 
+    @Column(name = "like_state", columnDefinition = "TINYINT(1)")
     private boolean likeState;
 }
