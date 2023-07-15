@@ -5,14 +5,22 @@ import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
 import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
 import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.post.PostService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
+
+    private static final int SET_COOKIE_TIME = 60 * 60 * 24; // 1 day
+    private static final String COOKIE_NAME = "assemblog_viewed_posts";
 
     private final PostService postService;
 
@@ -34,9 +42,15 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId) {
+    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         try {
             PostResponseDto postResponseDto = postService.readPost(postId);
+
+            if (postResponseDto.getStatusCode() == HttpStatus.OK.value()) {
+                // 조회수 증가
+                viewCount(postId, request, response);
+            }
+
             return ResponseEntity.status(postResponseDto.getStatusCode()).body(postResponseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
@@ -49,9 +63,9 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "15") int pageSize,
             @RequestParam(required = false, defaultValue = "created_at") String order,
             @RequestParam(required = false, defaultValue = "desc") String orderType,
-            @RequestParam(required = false, defaultValue = "0") int searchType) {
+            @RequestParam(required = false, defaultValue = "0") int boardId) {
         try {
-            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, searchType);
+            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardId);
             return ResponseEntity.status(postListResponseDto.getStatusCode()).body(postListResponseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
@@ -76,5 +90,39 @@ public class PostController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    private void viewCount(Long postId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        Cookie cookie = null;
+        boolean isCookie = false;
+
+        // request 에 쿠기가 있을 경우 확인한다.
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals(COOKIE_NAME)) {
+                    cookie = c;
+
+                    if (!c.getValue().contains("[" + postId + "]")) {
+                        postService.countView(postId);
+                        c.setValue(c.getValue() + "[" + postId + "]");
+                    }
+
+                    isCookie = true;
+                    break;
+                }
+            }
+        }
+        // request 에 postView 쿠키가 없을 경우 처음 접속한 것이므로 쿠키를 생성한다.
+        if (!isCookie) {
+            postService.countView(postId);
+            cookie = new Cookie(COOKIE_NAME, "[" + postId + "]");
+        }
+
+
+        // 모든 경로에서 접근 가능
+        cookie.setPath("/");
+        cookie.setMaxAge(SET_COOKIE_TIME); // 1일
+        response.addCookie(cookie);
     }
 }

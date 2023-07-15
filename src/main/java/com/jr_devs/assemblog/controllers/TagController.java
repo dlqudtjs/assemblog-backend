@@ -41,7 +41,7 @@ public class TagController {
         }
     }
 
-    @GetMapping("/api/tags")
+    @GetMapping("/lists/tags")
     public ResponseEntity<List<Tag>> readAllTags() {
         try {
             List<Tag> tags = tagService.readAllTags();

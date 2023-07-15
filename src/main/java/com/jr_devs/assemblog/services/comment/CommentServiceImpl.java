@@ -43,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
         return createResponse(HttpStatus.OK.value(), "Success write comment");
     }
 
+    @Transactional
     @Override
     public ResponseDto deleteComment(Long commentId, String password) {
         Comment comment = commentRepository.findById(commentId).orElse(null);
@@ -55,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Password is incorrect");
         }
 
-        commentRepository.deleteById(commentId);
+        comment.setDeleted(true);
 
         return createResponse(HttpStatus.OK.value(), "Success delete comment");
     }
@@ -74,6 +75,7 @@ public class CommentServiceImpl implements CommentService {
                     .depth(comment.getDepth())
                     .createdAt(comment.getCreatedAt())
                     .likeState(comment.isLikeState())
+                    .deleted(comment.isDeleted())
                     .build());
         }
 

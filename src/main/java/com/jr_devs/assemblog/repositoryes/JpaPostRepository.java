@@ -17,18 +17,12 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByWriterMailAndTitle(String writerMail, String title);
 
-    // post list 가져오기
-    public static final String SELECT_ALL_POST_LIST = "SELECT * " +
-            "FROM post " +
-            "WHERE post_use_state = 1 AND temp_save_state = 0 " +
-            "LIMIT :page_start_index, :page_size";
-
-    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :order, :order_type, :search_type)", nativeQuery = true)
+    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :order, :order_type, :board_id)", nativeQuery = true)
     List<Post> findPostList(@Param("page_start_index") int pageStartIndex,
                             @Param("page_size") int pageSize,
                             @Param("order") String order,
                             @Param("order_type") String orderType,
-                            @Param("search_type") int searchType);
+                            @Param("board_id") int boardId);
 
 
     void deleteByTitle(String title);

@@ -24,4 +24,6 @@ public class CommentListResponse {
     private String createdAt;
 
     private boolean likeState;
+
+    private boolean deleted;
 }

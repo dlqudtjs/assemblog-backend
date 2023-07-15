@@ -1,6 +1,5 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.services.user.TokenService;
 import com.jr_devs.assemblog.token.TokenDto;
 import lombok.RequiredArgsConstructor;

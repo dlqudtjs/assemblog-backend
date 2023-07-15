@@ -6,6 +6,7 @@ import com.jr_devs.assemblog.models.dtos.post.PostDto;
 import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
 import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
+import com.jr_devs.assemblog.repositoryes.JpaPostViewCountRepository;
 import com.jr_devs.assemblog.services.board.BoardService;
 import com.jr_devs.assemblog.services.comment.CommentService;
 import com.jr_devs.assemblog.services.tag.PostTagService;
@@ -33,6 +34,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
     private final CommentService commentService;
+    private final JpaPostViewCountRepository postViewCountRepository;
 
     /*
      * 작성 시 같은 제목의 임시 저장 글이 있으면 삭제한다.
@@ -120,7 +122,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto readPost(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
 
-        if (post == null) {
+        if (post == null && post.isTempSaveState()) {
             return PostResponseDto.builder()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .message("Not found post")
@@ -149,7 +151,7 @@ public class PostServiceImpl implements PostService {
                 .tempSaveState(post.isTempSaveState())
                 .categoryTitle(boardService.getCategoryTitleByBoardId(post.getBoardId()))
                 .boardTitle(boardService.getBoardTitle(post.getBoardId()))
-                .viewCount(0)
+                .viewCount(getPostViewCount(post.getId()))
                 .tagList(tagList)
                 .statusCode(HttpStatus.OK.value())
                 .message("Success read post")
@@ -219,13 +221,13 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
-    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int searchType) {
+    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int boardId) {
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
         List<Post> postList;
 
-        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, searchType);
+        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, boardId);
 
         List<PostListResponse> postListResponse = new ArrayList<>();
         for (Post post : postList) {
@@ -239,7 +241,7 @@ public class PostServiceImpl implements PostService {
                     .updatedAt(post.getUpdatedAt())
                     .categoryTitle(boardService.getCategoryTitleByBoardId(post.getBoardId()))
                     .boardTitle(boardService.getBoardTitle(post.getBoardId()))
-                    .viewCount(0)
+                    .viewCount(getPostViewCount(post.getId()))
                     .likeCount(0)
                     .commentCount(commentService.getCommentCount(post.getId()))
                     .build());
@@ -252,6 +254,17 @@ public class PostServiceImpl implements PostService {
                 .statusCode(HttpStatus.OK.value())
                 .message("Success read post list")
                 .build();
+    }
+
+    @Override
+    public void countView(Long postId) {
+        postViewCountRepository.save(PostViewCount.builder()
+                .postId(postId)
+                .build());
+    }
+
+    private int getPostViewCount(Long postId) {
+        return postViewCountRepository.countByPostId(postId);
     }
 
     // 태그를 삭제하며 태그가 더이상 참조하는 게시글이 없으면 태그 자체를 삭제한다.

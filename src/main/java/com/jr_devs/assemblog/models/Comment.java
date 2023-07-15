@@ -40,4 +40,7 @@ public class Comment {
 
     @Column(name = "like_state", columnDefinition = "TINYINT(1)")
     private boolean likeState;
+
+    @Column(name = "deleted", columnDefinition = "TINYINT(1)")
+    private boolean deleted;
 }
