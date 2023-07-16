@@ -12,7 +12,9 @@ public interface TagService {
 
     ResponseDto deleteTag(Long tagId);
 
-    Tag readTag(Long tagId);
+    Tag readTagById(Long tagId);
+
+    Tag readTagByName(String name);
 
     List<Tag> readAllTags();
 }

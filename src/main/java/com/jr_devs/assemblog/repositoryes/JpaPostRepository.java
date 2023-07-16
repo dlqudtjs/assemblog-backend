@@ -17,13 +17,17 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByWriterMailAndTitle(String writerMail, String title);
 
-    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :order, :order_type, :board_id)", nativeQuery = true)
+    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :order, :order_type, :board_id, :tag_id)", nativeQuery = true)
     List<Post> findPostList(@Param("page_start_index") int pageStartIndex,
                             @Param("page_size") int pageSize,
                             @Param("order") String order,
                             @Param("order_type") String orderType,
-                            @Param("board_id") long boardId);
+                            @Param("board_id") long boardId,
+                            @Param("tag_id") long tagId);
 
+    @Query(value = "CALL get_post_count(:board_id, :tag_id)", nativeQuery = true)
+    int findPostCount(@Param("board_id") long boardId,
+                      @Param("tag_id") long tagId);
 
     void deleteByTitle(String title);
 

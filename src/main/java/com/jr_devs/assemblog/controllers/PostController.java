@@ -63,9 +63,11 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "15") int pageSize,
             @RequestParam(required = false, defaultValue = "created_at") String order,
             @RequestParam(required = false, defaultValue = "desc") String orderType,
-            @RequestParam(required = false, defaultValue = "all") String boardTitle) {
+            @RequestParam(required = false, defaultValue = "all") String boardTitle,
+            @RequestParam(required = false, defaultValue = "all") String tagName) {
         try {
-            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle);
+            System.out.println("boardTitle = " + boardTitle);
+            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, tagName);
             return ResponseEntity.status(postListResponseDto.getStatusCode()).body(postListResponseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);

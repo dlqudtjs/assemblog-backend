@@ -30,8 +30,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag readTag(Long tagId) {
+    public Tag readTagById(Long tagId) {
         return jpaTagRepository.findById(tagId).orElse(null);
+    }
+
+    @Override
+    public Tag readTagByName(String name) {
+        return jpaTagRepository.findByName(name);
     }
 
     @Override

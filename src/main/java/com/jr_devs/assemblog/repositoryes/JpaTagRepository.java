@@ -16,8 +16,6 @@ public interface JpaTagRepository extends JpaRepository<Tag, Long> {
 
     void deleteById(Long id);
 
-    // 이름 순으로 정렬하여 모든 태그를 가져온다.
-    List<Tag> findAllByOrderByNameAsc();
 
     // 임시 저장, 숨김 여부를 체크 하지 않은 게시글을 참조한 태그만 조회
     @Query(value = "CALL get_tag_list()", nativeQuery = true)

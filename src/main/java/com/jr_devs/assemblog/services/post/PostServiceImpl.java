@@ -136,7 +136,7 @@ public class PostServiceImpl implements PostService {
         // 태그 Id 목록을 태그 이름 목록으로 변환
         List<String> tagList = new ArrayList<>();
         for (PostTag postTag : postTags) {
-            tagList.add(tagService.readTag(postTag.getTagId()).getName());
+            tagList.add(tagService.readTagById(postTag.getTagId()).getName());
         }
 
         return PostResponseDto.builder()
@@ -223,14 +223,16 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
-    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle) {
+    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle, String tagName) {
+        System.out.println("currentPage : " + currentPage);
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
         List<Post> postList;
         long boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
+        long tagId = tagName.equals("all") ? 0 : tagService.readTagByName(tagName).getId();
 
-        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, boardId);
+        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, boardId, tagId);
 
         List<PostListResponse> postListResponse = new ArrayList<>();
         for (Post post : postList) {
@@ -250,8 +252,11 @@ public class PostServiceImpl implements PostService {
                     .build());
         }
 
+        int postCount = postRepository.findPostCount(boardId, tagId);
+        int totalPage = (postCount % pageSize == 0) ? postCount / pageSize : postCount / pageSize + 1;
+
         return PostListResponseDto.builder()
-                .totalPage(postList.size())
+                .totalPage(totalPage)
                 .currentPage(currentPage)
                 .postList(postListResponse)
                 .statusCode(HttpStatus.OK.value())
