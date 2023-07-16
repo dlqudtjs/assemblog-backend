@@ -21,7 +21,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ResponseDto createBoard(BoardDto boardDto) {
-        if (!checkDuplicate(boardDto.getParentId(), boardDto.getTitle())) {
+        if (boardRepository.existsByTitle(boardDto.getTitle())) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
         }
 
@@ -106,19 +106,6 @@ public class BoardServiceImpl implements BoardService {
 
     private Long getBoardOrder() {
         return boardRepository.countBy();
-    }
-
-    // 카테고리명 중복 체크
-    private Boolean checkDuplicate(Long parentId, String title) {
-        List<Board> boards = readAllByParentId(parentId);
-        // parentId로 찾은 board 안에 중복된 title 이 있는지 확인
-        for (Board board : boards) {
-            if (board.getTitle().equals(title)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private ResponseDto createResponse(int value, String message) {

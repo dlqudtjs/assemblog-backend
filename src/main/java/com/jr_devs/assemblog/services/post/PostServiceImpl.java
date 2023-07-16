@@ -5,6 +5,7 @@ import com.jr_devs.assemblog.models.dtos.*;
 import com.jr_devs.assemblog.models.dtos.post.PostDto;
 import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
 import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
+import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
 import com.jr_devs.assemblog.repositoryes.JpaPostViewCountRepository;
 import com.jr_devs.assemblog.services.board.BoardService;
@@ -28,6 +29,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final JpaPostRepository postRepository;
+    private final JpaBoardRepository boardRepository;
     private final TagService tagService;
     private final PostTagService postTagService;
     private final BoardService boardService;
@@ -221,11 +223,12 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
-    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, int boardId) {
+    public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle) {
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
         List<Post> postList;
+        long boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
 
         postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, boardId);
 

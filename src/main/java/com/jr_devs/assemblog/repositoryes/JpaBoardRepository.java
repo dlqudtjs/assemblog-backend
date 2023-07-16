@@ -16,5 +16,7 @@ public interface JpaBoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findAllByTitle(String title);
 
+    Boolean existsByTitle(String title);
+
     Long countBy();
 }

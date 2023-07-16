@@ -41,10 +41,9 @@ public class TagServiceImpl implements TagService {
         return createResponse(HttpStatus.OK.value(), "Success delete tag");
     }
 
-    // todo 임시 저장에서 생성된 태그가 아닌 태그만 조회
     @Override
     public List<Tag> readAllTags() {
-        return jpaTagRepository.findAllByOrderByNameAsc();
+        return jpaTagRepository.findAllTags();
     }
 
     private ResponseDto createResponse(int statusCode, String message) {

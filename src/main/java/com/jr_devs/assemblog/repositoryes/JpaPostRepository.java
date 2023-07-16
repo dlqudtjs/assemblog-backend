@@ -22,7 +22,7 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
                             @Param("page_size") int pageSize,
                             @Param("order") String order,
                             @Param("order_type") String orderType,
-                            @Param("board_id") int boardId);
+                            @Param("board_id") long boardId);
 
 
     void deleteByTitle(String title);
