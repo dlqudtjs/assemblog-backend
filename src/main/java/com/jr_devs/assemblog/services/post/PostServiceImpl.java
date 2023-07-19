@@ -224,7 +224,6 @@ public class PostServiceImpl implements PostService {
     // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
     public PostListResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle, String tagName) {
-        System.out.println("currentPage : " + currentPage);
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 

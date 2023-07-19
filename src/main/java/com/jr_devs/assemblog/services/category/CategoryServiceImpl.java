@@ -46,24 +46,28 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAllByOrderByOrderNumAsc();
     }
 
+    @Transactional
     @Override
-    public ResponseDto updateCategory(CategoryDto categoryDto) {
-        Category category = categoryRepository.findById(categoryDto.getId()).orElse(null);
+    public ResponseDto updateCategory(List<CategoryDto> categoryDtoList) {
+        for (CategoryDto categoryDto : categoryDtoList) {
+            Category category = categoryRepository.findById(categoryDto.getId()).orElse(null);
 
-        if (category == null) {
-            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
-        }
-
-        List<Category> categoryList = categoryRepository.findAllByTitle(categoryDto.getTitle());
-        for (Category c : categoryList) {
-            if (!c.getId().equals(categoryDto.getId())) {
-                return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
+            if (category == null) {
+                return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
             }
-        }
+            
+            List<Category> categoryList = categoryRepository.findAllByTitle(categoryDto.getTitle());
 
-        category.setTitle(categoryDto.getTitle());
-        category.setUseState(categoryDto.isUseState());
-        category.setOrderNum(categoryDto.getOrderNum());
+            for (Category c : categoryList) {
+                if (!c.getId().equals(categoryDto.getId())) {
+                    return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
+                }
+            }
+
+            category.setTitle(categoryDto.getTitle());
+            category.setUseState(categoryDto.isUseState());
+            category.setOrderNum(categoryDto.getOrderNum());
+        }
 
         return createResponse(HttpStatus.OK.value(), "Success update category");
     }

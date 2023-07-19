@@ -8,7 +8,9 @@ import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,24 +41,31 @@ public class BoardServiceImpl implements BoardService {
         return createResponse(HttpStatus.OK.value(), "Success create board");
     }
 
+    @Transactional
     @Override
-    public ResponseDto updateBoard(BoardDto boardDto) {
-        Board board = boardRepository.findById(boardDto.getId()).orElse(null);
+    public ResponseDto updateBoard(List<BoardDto> boardDtoList) {
+        for (BoardDto boardDto : boardDtoList) {
+            Board board = boardRepository.findById(boardDto.getId()).orElse(null);
 
-        if (board == null) {
-            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
-        }
-
-        List<Board> boardList = boardRepository.findAllByTitle(boardDto.getTitle());
-        for (Board b : boardList) {
-            if (!b.getId().equals(boardDto.getId())) {
-                return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
+            if (board == null) {
+                return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
             }
-        }
 
-        board.setTitle(boardDto.getTitle());
-        board.setUseState(boardDto.isUseState());
-        board.setOrderNum(boardDto.getOrderNum());
+            List<Board> boardList = boardRepository.findAllByTitle(boardDto.getTitle());
+
+            for (Board b : boardList) {
+                if (!b.getId().equals(boardDto.getId())) {
+                    return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
+                }
+            }
+
+            System.out.println(boardDto.getTitle());
+            System.out.println(boardDto.isUseState());
+
+            board.setTitle(boardDto.getTitle());
+            board.setUseState(boardDto.isUseState());
+            board.setOrderNum(boardDto.getOrderNum());
+        }
 
         return createResponse(HttpStatus.OK.value(), "Success update board");
     }

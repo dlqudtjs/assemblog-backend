@@ -10,7 +10,7 @@ public interface BoardService {
 
     ResponseDto createBoard(BoardDto boardDto);
 
-    ResponseDto updateBoard(BoardDto boardDto);
+    ResponseDto updateBoard(List<BoardDto> boardDtoList);
 
     ResponseDto deleteBoard(Long boardId);
 

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
@@ -24,9 +26,9 @@ public class BoardController {
     }
 
     @PatchMapping("/api/boards")
-    public ResponseEntity<String> updateBoard(@RequestBody BoardDto boardDto) {
+    public ResponseEntity<String> updateBoard(@RequestBody List<BoardDto> boardDtoList) {
         try {
-            ResponseDto responseDto = boardService.updateBoard(boardDto);
+            ResponseDto responseDto = boardService.updateBoard(boardDtoList);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

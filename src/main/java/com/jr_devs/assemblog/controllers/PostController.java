@@ -66,7 +66,6 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "all") String boardTitle,
             @RequestParam(required = false, defaultValue = "all") String tagName) {
         try {
-            System.out.println("boardTitle = " + boardTitle);
             PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, tagName);
             return ResponseEntity.status(postListResponseDto.getStatusCode()).body(postListResponseDto);
         } catch (Exception e) {

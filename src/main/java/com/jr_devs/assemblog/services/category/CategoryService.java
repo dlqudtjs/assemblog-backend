@@ -14,7 +14,7 @@ public interface CategoryService {
 
     List<CategoryDto> readAllCategoriesAndBoards();
 
-    ResponseDto updateCategory(CategoryDto categoryDto);
+    ResponseDto updateCategory(List<CategoryDto> categoryDtoList);
 
     ResponseDto deleteCategory(Long categoryId);
 
