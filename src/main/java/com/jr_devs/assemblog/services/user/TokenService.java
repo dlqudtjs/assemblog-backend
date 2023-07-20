@@ -1,6 +1,5 @@
 package com.jr_devs.assemblog.services.user;
 
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaRefreshTokenRepository;
 import com.jr_devs.assemblog.token.JwtProvider;
 import com.jr_devs.assemblog.token.RefreshToken;

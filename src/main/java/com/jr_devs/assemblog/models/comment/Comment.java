@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.comment;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

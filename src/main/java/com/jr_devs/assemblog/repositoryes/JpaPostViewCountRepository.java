@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.PostViewCount;
+import com.jr_devs.assemblog.models.post.PostViewCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaPostViewCountRepository extends JpaRepository<PostViewCount, Long> {

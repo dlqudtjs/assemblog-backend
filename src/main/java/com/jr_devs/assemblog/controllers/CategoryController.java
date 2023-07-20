@@ -1,10 +1,9 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.CategoryDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.category.CategoryDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.services.category.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

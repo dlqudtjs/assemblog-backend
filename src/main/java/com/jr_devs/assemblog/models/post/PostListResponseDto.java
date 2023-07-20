@@ -1,6 +1,5 @@
-package com.jr_devs.assemblog.models.dtos.post;
+package com.jr_devs.assemblog.models.post;
 
-import com.jr_devs.assemblog.models.PostListResponse;
 import lombok.*;
 
 import java.util.List;

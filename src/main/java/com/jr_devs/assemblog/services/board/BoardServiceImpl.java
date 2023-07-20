@@ -1,14 +1,13 @@
 package com.jr_devs.assemblog.services.board;
 
-import com.jr_devs.assemblog.models.Board;
-import com.jr_devs.assemblog.models.Category;
-import com.jr_devs.assemblog.models.dtos.BoardDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.board.Board;
+import com.jr_devs.assemblog.models.category.Category;
+import com.jr_devs.assemblog.models.board.BoardDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +58,7 @@ public class BoardServiceImpl implements BoardService {
                 }
             }
 
-            System.out.println(boardDto.getTitle());
-            System.out.println(boardDto.isUseState());
+            System.out.println(boardDto.getTitle() + " | " + boardDto.getOrderNum());
 
             board.setTitle(boardDto.getTitle());
             board.setUseState(boardDto.isUseState());
@@ -85,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Board> readAllByParentId(Long parentId) {
-        return boardRepository.findAllByParentId(parentId);
+        return boardRepository.findAllByParentIdOrderByOrderNum(parentId);
     }
 
     @Override

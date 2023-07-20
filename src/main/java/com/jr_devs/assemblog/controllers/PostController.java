@@ -1,9 +1,9 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.post.PostDto;
-import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
-import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.post.PostDto;
+import com.jr_devs.assemblog.models.post.PostListResponseDto;
+import com.jr_devs.assemblog.models.post.PostResponseDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.services.post.PostService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,12 +43,15 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         try {
+            System.out.println(11);
             PostResponseDto postResponseDto = postService.readPost(postId);
 
             if (postResponseDto.getStatusCode() == HttpStatus.OK.value()) {
                 // 조회수 증가
                 viewCount(postId, request, response);
             }
+
+            System.out.println(22);
 
             return ResponseEntity.status(postResponseDto.getStatusCode()).body(postResponseDto);
         } catch (Exception e) {

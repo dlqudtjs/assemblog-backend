@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.post;
 
 
 import jakarta.persistence.Entity;

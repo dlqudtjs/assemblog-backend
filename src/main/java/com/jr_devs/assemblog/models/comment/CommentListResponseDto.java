@@ -1,6 +1,5 @@
-package com.jr_devs.assemblog.models.dtos.comment;
+package com.jr_devs.assemblog.models.comment;
 
-import com.jr_devs.assemblog.models.CommentListResponse;
 import lombok.*;
 
 import java.util.List;

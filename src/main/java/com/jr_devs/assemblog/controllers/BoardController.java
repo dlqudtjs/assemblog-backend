@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.BoardDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.board.BoardDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.services.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

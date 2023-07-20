@@ -1,10 +1,8 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.Post;
-import com.jr_devs.assemblog.models.Tag;
+import com.jr_devs.assemblog.models.tag.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

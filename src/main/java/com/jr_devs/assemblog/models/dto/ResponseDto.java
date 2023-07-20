@@ -1,6 +1,5 @@
-package com.jr_devs.assemblog.models.dtos;
+package com.jr_devs.assemblog.models.dto;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.jr_devs.assemblog.services.media;
 
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import com.jr_devs.assemblog.models.dtos.MediaRequestDto;
+import com.jr_devs.assemblog.models.dto.MediaRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

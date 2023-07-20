@@ -1,10 +1,10 @@
 package com.jr_devs.assemblog.services.comment;
 
-import com.jr_devs.assemblog.models.Comment;
-import com.jr_devs.assemblog.models.CommentListResponse;
-import com.jr_devs.assemblog.models.dtos.comment.CommentDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
-import com.jr_devs.assemblog.models.dtos.comment.CommentListResponseDto;
+import com.jr_devs.assemblog.models.comment.Comment;
+import com.jr_devs.assemblog.models.comment.CommentListResponse;
+import com.jr_devs.assemblog.models.comment.CommentDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
+import com.jr_devs.assemblog.models.comment.CommentListResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaCommentRepository;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
 import lombok.RequiredArgsConstructor;

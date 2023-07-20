@@ -1,10 +1,9 @@
 package com.jr_devs.assemblog.services.post;
 
-import com.jr_devs.assemblog.models.*;
-import com.jr_devs.assemblog.models.dtos.*;
-import com.jr_devs.assemblog.models.dtos.post.PostDto;
-import com.jr_devs.assemblog.models.dtos.post.PostListResponseDto;
-import com.jr_devs.assemblog.models.dtos.post.PostResponseDto;
+import com.jr_devs.assemblog.models.dto.*;
+import com.jr_devs.assemblog.models.post.*;
+import com.jr_devs.assemblog.models.tag.Tag;
+import com.jr_devs.assemblog.models.tag.TagDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
 import com.jr_devs.assemblog.repositoryes.JpaPostViewCountRepository;
@@ -122,6 +121,7 @@ public class PostServiceImpl implements PostService {
     // 게시글 조회
     @Override
     public PostResponseDto readPost(Long postId) {
+        System.out.println(1);
         Post post = postRepository.findById(postId).orElse(null);
 
         if (post == null && post.isTempSaveState()) {
@@ -131,6 +131,7 @@ public class PostServiceImpl implements PostService {
                     .build();
         }
 
+        System.out.println(2);
         // 게시글의 태그 목록 가져오기
         List<PostTag> postTags = postTagService.getPostTagsByPostId(postId);
         // 태그 Id 목록을 태그 이름 목록으로 변환
@@ -139,6 +140,7 @@ public class PostServiceImpl implements PostService {
             tagList.add(tagService.readTagById(postTag.getTagId()).getName());
         }
 
+        System.out.println(3);
         return PostResponseDto.builder()
                 .postId(post.getId())
                 .username(userService.getUsernameByEmail(post.getWriterMail()))

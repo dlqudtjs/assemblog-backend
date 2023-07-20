@@ -1,8 +1,9 @@
 package com.jr_devs.assemblog.services.board;
 
-import com.jr_devs.assemblog.models.*;
-import com.jr_devs.assemblog.models.dtos.BoardDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.board.Board;
+import com.jr_devs.assemblog.models.category.Category;
+import com.jr_devs.assemblog.models.board.BoardDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.repositoryes.JpaBoardRepository;
 import com.jr_devs.assemblog.repositoryes.JpaCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.repositoryes;
 
 
-import com.jr_devs.assemblog.models.Comment;
+import com.jr_devs.assemblog.models.comment.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

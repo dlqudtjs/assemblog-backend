@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models.dtos.comment;
+package com.jr_devs.assemblog.models.comment;
 
 import lombok.*;
 

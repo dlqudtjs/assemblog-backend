@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models.dtos.post;
+package com.jr_devs.assemblog.models.post;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

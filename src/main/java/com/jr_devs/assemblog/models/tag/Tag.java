@@ -1,4 +1,4 @@
-package com.jr_devs.assemblog.models;
+package com.jr_devs.assemblog.models.tag;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "category")
-public class Category {
+@Table(name = "tag")
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    @Column(name = "use_state", columnDefinition = "TINYINT(1)")
-    private boolean useState;
-
-    @Column(name = "order_num")
-    private int orderNum;
+    private String name;
 }

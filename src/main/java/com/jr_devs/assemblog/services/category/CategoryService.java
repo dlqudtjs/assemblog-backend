@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.category;
 
-import com.jr_devs.assemblog.models.Category;
-import com.jr_devs.assemblog.models.dtos.CategoryDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.category.Category;
+import com.jr_devs.assemblog.models.category.CategoryDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 
 import java.util.List;
 

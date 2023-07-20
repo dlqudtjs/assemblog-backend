@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.Category;
+import com.jr_devs.assemblog.models.category.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

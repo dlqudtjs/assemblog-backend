@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.board;
 
-import com.jr_devs.assemblog.models.Board;
-import com.jr_devs.assemblog.models.dtos.BoardDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
+import com.jr_devs.assemblog.models.board.Board;
+import com.jr_devs.assemblog.models.board.BoardDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
 
 import java.util.List;
 

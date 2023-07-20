@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.controllers;
 
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
-import com.jr_devs.assemblog.models.Tag;
-import com.jr_devs.assemblog.models.dtos.TagDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
+import com.jr_devs.assemblog.models.tag.Tag;
+import com.jr_devs.assemblog.models.tag.TagDto;
 import com.jr_devs.assemblog.services.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

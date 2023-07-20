@@ -1,7 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.Post;
-import org.springframework.data.domain.Sort;
+import com.jr_devs.assemblog.models.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

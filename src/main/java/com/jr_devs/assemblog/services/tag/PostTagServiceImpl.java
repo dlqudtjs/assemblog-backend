@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.services.tag;
 
 
-import com.jr_devs.assemblog.models.PostTag;
+import com.jr_devs.assemblog.models.post.PostTag;
 import com.jr_devs.assemblog.repositoryes.JpaPostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

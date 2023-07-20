@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.services.security;
 
-import com.jr_devs.assemblog.models.dtos.UserDto;
+import com.jr_devs.assemblog.models.user.UserDto;
 import com.jr_devs.assemblog.services.user.UserService;
 import com.jr_devs.assemblog.token.JwtProvider;
 import com.jr_devs.assemblog.token.TokenDto;

@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.tag;
 
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
-import com.jr_devs.assemblog.models.Tag;
-import com.jr_devs.assemblog.models.dtos.TagDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
+import com.jr_devs.assemblog.models.tag.Tag;
+import com.jr_devs.assemblog.models.tag.TagDto;
 
 import java.util.List;
 

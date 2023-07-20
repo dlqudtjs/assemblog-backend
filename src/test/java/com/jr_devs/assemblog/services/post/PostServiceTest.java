@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.services.post;
 
-import com.jr_devs.assemblog.models.Post;
-import com.jr_devs.assemblog.models.dtos.post.PostDto;
+import com.jr_devs.assemblog.models.post.Post;
+import com.jr_devs.assemblog.models.post.PostDto;
 import com.jr_devs.assemblog.repositoryes.JpaPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

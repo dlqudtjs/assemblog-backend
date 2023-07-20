@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.services.tag;
 
-import com.jr_devs.assemblog.models.Tag;
-import com.jr_devs.assemblog.models.dtos.TagDto;
+import com.jr_devs.assemblog.models.tag.Tag;
+import com.jr_devs.assemblog.models.tag.TagDto;
 import com.jr_devs.assemblog.repositoryes.JpaTagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

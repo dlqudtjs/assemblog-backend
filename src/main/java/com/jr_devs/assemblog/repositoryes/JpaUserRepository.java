@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.User;
+import com.jr_devs.assemblog.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

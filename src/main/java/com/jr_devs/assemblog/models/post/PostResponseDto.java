@@ -1,6 +1,5 @@
-package com.jr_devs.assemblog.models.dtos.post;
+package com.jr_devs.assemblog.models.post;
 
-import com.jr_devs.assemblog.models.Tag;
 import lombok.*;
 
 import java.util.Date;

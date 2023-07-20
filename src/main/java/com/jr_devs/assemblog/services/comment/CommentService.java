@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.services.comment;
 
-import com.jr_devs.assemblog.models.dtos.comment.CommentDto;
-import com.jr_devs.assemblog.models.dtos.ResponseDto;
-import com.jr_devs.assemblog.models.dtos.comment.CommentListResponseDto;
+import com.jr_devs.assemblog.models.comment.CommentDto;
+import com.jr_devs.assemblog.models.dto.ResponseDto;
+import com.jr_devs.assemblog.models.comment.CommentListResponseDto;
 
 public interface CommentService {
 

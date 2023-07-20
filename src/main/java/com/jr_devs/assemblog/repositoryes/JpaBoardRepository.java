@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.Board;
+import com.jr_devs.assemblog.models.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public interface JpaBoardRepository extends JpaRepository<Board, Long> {
 
     Board save(Board board);
 
-    List<Board> findAllByParentId(Long parentId);
+    List<Board> findAllByParentIdOrderByOrderNum(Long parentId);
 
     Optional<Board> findByTitle(String title);
 

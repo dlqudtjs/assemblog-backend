@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.repositoryes;
 
-import com.jr_devs.assemblog.models.PostTag;
+import com.jr_devs.assemblog.models.post.PostTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
