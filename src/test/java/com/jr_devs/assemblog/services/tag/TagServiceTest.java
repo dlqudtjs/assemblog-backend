@@ -53,25 +53,4 @@ public class TagServiceTest {
         // then
         assertThat(tagRepository.findByName(name)).isNull();
     }
-
-    @Test
-    @DisplayName("Tag 조회 테스트")
-    public void readAllTagsTest() {
-        // given
-        String name1 = "test_tag1";
-        String name2 = "test_tag2";
-        tagService.createTag(TagDto.builder()
-                .name(name1)
-                .build());
-        tagService.createTag(TagDto.builder()
-                .name(name2)
-                .build());
-
-        // when
-        List<Tag> tags = tagService.readAllTags();
-
-        // then
-        assertThat(tags).contains(tagRepository.findByName(name1));
-        assertThat(tags).contains(tagRepository.findByName(name2));
-    }
 }

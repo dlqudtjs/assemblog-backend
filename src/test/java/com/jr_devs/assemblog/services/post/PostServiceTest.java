@@ -34,7 +34,7 @@ public class PostServiceTest {
         tags.add("test_tag2");
 
         postDto = PostDto.builder()
-                .boardId(4L)
+                .boardId(5L)
                 .writerMail("user@gmail.com")
                 .title("test_title")
                 .content("test_content")

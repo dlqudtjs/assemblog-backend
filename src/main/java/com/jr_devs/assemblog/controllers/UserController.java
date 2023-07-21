@@ -3,6 +3,7 @@ package com.jr_devs.assemblog.controllers;
 import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.models.user.UserDto;
 import com.jr_devs.assemblog.models.user.UserIntroductionResponse;
+import com.jr_devs.assemblog.models.user.UserUpdateDto;
 import com.jr_devs.assemblog.services.user.UserService;
 import com.jr_devs.assemblog.token.TokenDto;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @GetMapping({"/api/users"})
+    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String token) {
+        try {
+            UserDto userDto = userService.getUser(token.substring(7));
+            return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PatchMapping({"/api/users"})
+    public ResponseEntity<String> updateUser(@RequestBody UserUpdateDto UserUpdateDto) {
+        try {
+            ResponseDto responseDto = userService.updateUser(UserUpdateDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
     @PatchMapping({"/api/user-introductions"})
     public ResponseEntity<String> updateUserIntroduction(@RequestBody UserIntroductionResponse UserIntroduction) {

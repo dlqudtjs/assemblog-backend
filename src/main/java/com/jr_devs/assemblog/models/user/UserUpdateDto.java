@@ -7,10 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDto {
+public class UserUpdateDto {
 
     private String username;
     private String email;
-    private String password;
-    private String profileImageURL;
+    private String oldPassword;
+    private String newPassword;
+    private String profileImageUrl;
 }

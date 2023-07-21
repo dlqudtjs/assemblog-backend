@@ -9,7 +9,6 @@ import com.jr_devs.assemblog.repositoryes.JpaUserRepository;
 import com.jr_devs.assemblog.token.JwtProvider;
 import com.jr_devs.assemblog.token.RefreshToken;
 import com.jr_devs.assemblog.token.TokenDto;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,6 +93,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUser(String token) {
+        String email = jwtProvider.getEmailFromToken(token);
+        User user = userRepository.findByEmail(email).get();
+
+        return UserDto.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .profileImageURL(user.getProfileImageURL())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseDto updateUser(UserUpdateDto UserUpdateDto) {
+        User user = userRepository.findByEmail(UserUpdateDto.getEmail()).get();
+
+        // 비밀번호 검사
+        if (!passwordEncoder.matches(UserUpdateDto.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Not Match Password");
+        }
+
+        // 유저 정보 변경
+        user.setUsername(UserUpdateDto.getUsername());
+        user.setProfileImageURL(UserUpdateDto.getProfileImageUrl());
+
+        if (!UserUpdateDto.getNewPassword().equals("")) {
+            user.setPassword(passwordEncoder.encode(UserUpdateDto.getNewPassword()));
+        }
+
+        return ResponseDto.builder()
+                .message("Success update user")
+                .statusCode(HttpStatus.OK.value())
+                .build();
+    }
+
+    @Override
     public ResponseDto updateUserIntroduction(UserIntroductionResponse userIntroductionDto) {
         User user = userRepository.findByEmail(userIntroductionDto.getEmail()).get();
 
@@ -107,7 +142,7 @@ public class UserServiceImpl implements UserService {
         UserIntroduction findUserIntroduction = userIntroductionRepository.findByUserId(user.getId());
 
         findUserIntroduction.setIntroduction(userIntroductionDto.getIntroduction());
-        findUserIntroduction.setProfileImageURL(userIntroductionDto.getProfileImageURL());
+        findUserIntroduction.setBackgroundImageURL(userIntroductionDto.getBackgroundImageURL());
 
         List<UserIntroductionLink> userIntroductionLinkList = userIntroductionLinkRepository.findByUserId(findUserIntroduction.getId());
 
@@ -143,13 +178,27 @@ public class UserServiceImpl implements UserService {
 
         for (UserIntroduction userIntroduction : userIntroductionList) {
             User user = userRepository.findById(userIntroduction.getUserId()).get();
+
             List<UserIntroductionLink> userIntroductionLinkList = userIntroductionLinkRepository.findByUserId(userIntroduction.getId());
+
+            // 유저 소개 링크는 최대 3개까지만 가져온다.
+            int size = 3 - userIntroductionLinkList.size();
+
+            // 유저 소개 링크가 3개가 안되면 빈 링크를 추가한다. (프론트 요청)
+            for (int i = 0; i < size; i++) {
+                userIntroductionLinkList.add(UserIntroductionLink.builder()
+                        .linkDescription(null)
+                        .linkURL(null)
+                        .linkImageURL(null)
+                        .build());
+            }
 
             userIntroductionResponseList.add(UserIntroductionResponse.builder()
                     .username(user.getUsername())
                     .email(user.getEmail())
                     .introduction(userIntroduction.getIntroduction())
-                    .profileImageURL(userIntroduction.getProfileImageURL())
+                    .profileImageURL(user.getProfileImageURL())
+                    .backgroundImageURL(userIntroduction.getBackgroundImageURL())
                     .links(userIntroductionLinkList)
                     .build());
         }

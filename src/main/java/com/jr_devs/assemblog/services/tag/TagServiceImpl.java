@@ -7,6 +7,7 @@ import com.jr_devs.assemblog.repositoryes.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class TagServiceImpl implements TagService {
     private final JpaTagRepository jpaTagRepository;
 
     @Override
+    @Transactional
     public Tag createTag(TagDto tagDto) {
         Tag tag = jpaTagRepository.findByName(tagDto.getName());
 

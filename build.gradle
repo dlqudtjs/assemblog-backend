@@ -1,8 +1,16 @@
+/*
+* (1) 해당 플러그인은 .adoc 파일 변환과 build/ 디렉토리에 복사해주는 플러그인이다. (gradle 7 이상 부터 'org.aciidoctor.jvm.convert'로 변경)
+* (2) Snippets 생성위치를 전역 변수로 할당한다.
+* (3) test 의 출력 디렉토리를 snippetsDir 로 설정한다.
+* (4) asciidoctor 의 입력 디렉토리를 snippetsDir 로 설정한다.
+* (5) asciidoctor 작업이 실행되기 전에 test 작업이 실행되도록 한다.
+* (6) spring-restdocs-mockmvc 라이브러리를 추가한다.
+ */
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2' // (1)
 }
 
 group = 'com.jr_devs'
@@ -23,7 +31,7 @@ repositories {
 }
 
 ext {
-    set('snippetsDir', file("build/generated-snippets"))
+    set('snippetsDir', file("build/generated-snippets")) // (2)
     set('springCloudGcpVersion', "4.5.0")
     set('springCloudVersion', "2022.0.3")
 }
@@ -31,26 +39,19 @@ ext {
 dependencies {
     implementation 'mysql:mysql-connector-java:8.0.26'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
-    //
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // (6)
 
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-}
-
-ext {
-    set('springCloudGcpVersion', "4.5.0")
-    set('springCloudVersion', "2022.0.3")
 }
 
 dependencyManagement {
@@ -61,11 +62,11 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-    outputs.dir snippetsDir
+    outputs.dir snippetsDir // (3)
     useJUnitPlatform()
 }
 
 tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
+    inputs.dir snippetsDir // (4)
+    dependsOn test // (5)
 }

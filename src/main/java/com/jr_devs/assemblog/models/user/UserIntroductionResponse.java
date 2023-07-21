@@ -19,5 +19,7 @@ public class UserIntroductionResponse {
 
     private String profileImageURL;
 
+    private String backgroundImageURL;
+
     private List<UserIntroductionLink> links;
 }

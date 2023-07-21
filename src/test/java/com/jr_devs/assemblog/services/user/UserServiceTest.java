@@ -2,6 +2,8 @@ package com.jr_devs.assemblog.services.user;
 
 import com.jr_devs.assemblog.models.dto.ResponseDto;
 import com.jr_devs.assemblog.models.user.UserDto;
+import com.jr_devs.assemblog.token.JwtProvider;
+import com.jr_devs.assemblog.token.TokenDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Test
     @DisplayName("회원가입 테스트")
@@ -97,7 +102,7 @@ public class UserServiceTest {
         userService.join(userDto);
 
         // then
-        ResponseDto responseDto = userService.login(userDto);
-        assertThat(responseDto.getMessage()).isEqualTo("loginTestUser@gmail.com");
+        TokenDto tokenDto = userService.login(userDto);
+        assertThat(jwtProvider.getEmailFromToken(tokenDto.getAccess_token())).isEqualTo("loginTestUser@gmail.com");
     }
 }
