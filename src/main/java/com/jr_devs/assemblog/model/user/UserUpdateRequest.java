@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateDto {
+public class UserUpdateRequest {
 
     private String username;
     private String email;

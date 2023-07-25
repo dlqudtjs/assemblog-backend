@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostTagService {
 
-    void createPostTag(Long boardId, Long tagId);
+    void createPostTag(Long boardId, List<String> tags);
 
     void deletePostTag(Long postId, Long tagId);
 

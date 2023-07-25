@@ -2,7 +2,6 @@ package com.jr_devs.assemblog.service.tag;
 
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.model.tag.Tag;
-import com.jr_devs.assemblog.model.tag.TagDto;
 import com.jr_devs.assemblog.repository.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,16 +18,18 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public Tag createTag(TagDto tagDto) {
-        Tag tag = jpaTagRepository.findByName(tagDto.getName());
+    public ResponseDto createTag(List<String> tags) {
+        for (String tagName : tags) {
+            Tag tag = jpaTagRepository.findByName(tagName);
 
-        if (tag != null) {
-            return tag;
+            if (tag == null) {
+                jpaTagRepository.save(Tag.builder()
+                        .name(tagName)
+                        .build());
+            }
         }
 
-        return jpaTagRepository.save(Tag.builder()
-                .name(tagDto.getName())
-                .build());
+        return createResponse(HttpStatus.OK.value(), "Success create tag");
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.jr_devs.assemblog.service.board;
 
 import com.jr_devs.assemblog.model.board.Board;
 import com.jr_devs.assemblog.model.category.Category;
-import com.jr_devs.assemblog.model.board.BoardDto;
+import com.jr_devs.assemblog.model.board.BoardRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.repository.JpaBoardRepository;
 import com.jr_devs.assemblog.repository.JpaCategoryRepository;
@@ -46,7 +46,7 @@ public class BoardServiceTest {
     @DisplayName("게시판 생성")
     public void createBoard() {
         // when
-        ResponseDto responseDto = boardService.createBoard(BoardDto.builder()
+        ResponseDto responseDto = boardService.createBoard(BoardRequest.builder()
                 .parentId(category.getId())
                 .title("test_board")
                 .build());
@@ -60,13 +60,13 @@ public class BoardServiceTest {
     public void DuplicateBoardTitleCheck() {
         // given
         String boardTitle = "test_category";
-        boardService.createBoard(BoardDto.builder()
+        boardService.createBoard(BoardRequest.builder()
                 .parentId(category.getId())
                 .title(boardTitle)
                 .build());
 
         // when
-        ResponseDto responseDto = boardService.createBoard(BoardDto.builder()
+        ResponseDto responseDto = boardService.createBoard(BoardRequest.builder()
                 .parentId(category.getId())
                 .title(boardTitle)
                 .build());
@@ -80,7 +80,7 @@ public class BoardServiceTest {
     public void updateBoardTest() {
         // given
         String boardTitle = "test_board";
-        boardService.createBoard(BoardDto.builder()
+        boardService.createBoard(BoardRequest.builder()
                 .parentId(category.getId())
                 .title(boardTitle)
                 .build());
@@ -106,7 +106,7 @@ public class BoardServiceTest {
     public void deleteBoardTest() {
         // given
         String boardTitle = "test_board";
-        boardService.createBoard(BoardDto.builder()
+        boardService.createBoard(BoardRequest.builder()
                 .parentId(category.getId())
                 .title(boardTitle)
                 .build());

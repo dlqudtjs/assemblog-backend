@@ -106,20 +106,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseDto updateUser(UserUpdateDto UserUpdateDto) {
-        User user = userRepository.findByEmail(UserUpdateDto.getEmail()).get();
+    public ResponseDto updateUser(UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findByEmail(userUpdateRequest.getEmail()).get();
 
         // 비밀번호 검사
-        if (!passwordEncoder.matches(UserUpdateDto.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userUpdateRequest.getOldPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Not Match Password");
         }
 
         // 유저 정보 변경
-        user.setUsername(UserUpdateDto.getUsername());
-        user.setProfileImageURL(UserUpdateDto.getProfileImageUrl());
+        user.setUsername(userUpdateRequest.getUsername());
+        user.setProfileImageURL(userUpdateRequest.getProfileImageUrl());
 
-        if (!UserUpdateDto.getNewPassword().equals("")) {
-            user.setPassword(passwordEncoder.encode(UserUpdateDto.getNewPassword()));
+        if (!userUpdateRequest.getNewPassword().equals("")) {
+            user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
         }
 
         return ResponseDto.builder()

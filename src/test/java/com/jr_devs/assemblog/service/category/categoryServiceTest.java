@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.service.category;
 
 import com.jr_devs.assemblog.model.category.Category;
-import com.jr_devs.assemblog.model.category.CategoryDto;
+import com.jr_devs.assemblog.model.category.CategoryRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.repository.JpaCategoryRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ public class categoryServiceTest {
     @DisplayName("카테고리 생성")
     public void createCategory() {
         // when
-        ResponseDto responseDto = categoryService.createCategory(CategoryDto.builder()
+        ResponseDto responseDto = categoryService.createCategory(CategoryRequest.builder()
                 .title("test_category")
                 .build());
 
@@ -38,12 +38,12 @@ public class categoryServiceTest {
     @DisplayName("카테고리 이름 중복 검사")
     public void DuplicateCategoryTitleCheck() {
         // given
-        categoryService.createCategory(CategoryDto.builder()
+        categoryService.createCategory(CategoryRequest.builder()
                 .title("test_category")
                 .build());
 
         // when
-        ResponseDto responseDto = categoryService.createCategory(CategoryDto.builder()
+        ResponseDto responseDto = categoryService.createCategory(CategoryRequest.builder()
                 .title("test_category")
                 .build());
 
@@ -55,7 +55,7 @@ public class categoryServiceTest {
     @DisplayName("카테고리 title, order, 숨김 수정")
     public void updateCategoryTest() {
         // given
-        categoryService.createCategory(CategoryDto.builder()
+        categoryService.createCategory(CategoryRequest.builder()
                 .title("test_category")
                 .build());
         Category testCategory = categoryRepository.findByTitle("test_category").get();
@@ -75,7 +75,7 @@ public class categoryServiceTest {
     @DisplayName("카테고리 삭제")
     public void deleteCategoryTest() {
         // given
-        categoryService.createCategory(CategoryDto.builder()
+        categoryService.createCategory(CategoryRequest.builder()
                 .title("test_category")
                 .build());
         Category testCategory = categoryRepository.findByTitle("test_category").get();

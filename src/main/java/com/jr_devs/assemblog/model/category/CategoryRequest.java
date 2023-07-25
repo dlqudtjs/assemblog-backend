@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+public class CategoryRequest {
 
     private Long id;
 
@@ -21,6 +21,4 @@ public class CategoryDto {
     private boolean useState;
 
     private int orderNum;
-
-    private List<Board> boards;
 }

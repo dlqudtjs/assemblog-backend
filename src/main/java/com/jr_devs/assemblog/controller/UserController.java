@@ -4,7 +4,7 @@ import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.model.user.UserResponse;
 import com.jr_devs.assemblog.model.user.UserIntroductionResponse;
 import com.jr_devs.assemblog.model.user.UserRequest;
-import com.jr_devs.assemblog.model.user.UserUpdateDto;
+import com.jr_devs.assemblog.model.user.UserUpdateRequest;
 import com.jr_devs.assemblog.service.user.UserService;
 import com.jr_devs.assemblog.token.TokenDto;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +52,9 @@ public class UserController {
     }
 
     @PatchMapping({"/api/users"})
-    public ResponseEntity<String> updateUser(@RequestBody UserUpdateDto UserUpdateDto) {
+    public ResponseEntity<String> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         try {
-            ResponseDto responseDto = userService.updateUser(UserUpdateDto);
+            ResponseDto responseDto = userService.updateUser(userUpdateRequest);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

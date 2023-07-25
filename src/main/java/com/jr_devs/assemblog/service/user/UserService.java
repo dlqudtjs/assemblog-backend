@@ -4,15 +4,15 @@ import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.model.user.UserResponse;
 import com.jr_devs.assemblog.model.user.UserIntroductionResponse;
 import com.jr_devs.assemblog.model.user.UserRequest;
-import com.jr_devs.assemblog.model.user.UserUpdateDto;
+import com.jr_devs.assemblog.model.user.UserUpdateRequest;
 import com.jr_devs.assemblog.token.TokenDto;
 
 import java.util.List;
 
 public interface UserService {
-    ResponseDto join(UserRequest UserForm);
+    ResponseDto join(UserRequest userRequest);
 
-    TokenDto login(UserRequest UserForm);
+    TokenDto login(UserRequest userRequest);
 
     String getUsernameByEmail(String email);
 
@@ -22,5 +22,5 @@ public interface UserService {
 
     UserResponse getUser(String token);
 
-    ResponseDto updateUser(UserUpdateDto UserUpdateDto);
+    ResponseDto updateUser(UserUpdateRequest userUpdateRequest);
 }

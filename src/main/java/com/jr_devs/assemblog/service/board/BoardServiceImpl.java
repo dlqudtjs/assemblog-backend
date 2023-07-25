@@ -2,7 +2,7 @@ package com.jr_devs.assemblog.service.board;
 
 import com.jr_devs.assemblog.model.board.Board;
 import com.jr_devs.assemblog.model.category.Category;
-import com.jr_devs.assemblog.model.board.BoardDto;
+import com.jr_devs.assemblog.model.board.BoardRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.repository.JpaBoardRepository;
 import com.jr_devs.assemblog.repository.JpaCategoryRepository;
@@ -21,8 +21,8 @@ public class BoardServiceImpl implements BoardService {
     private final JpaCategoryRepository categoryRepository;
 
     @Override
-    public ResponseDto createBoard(BoardDto boardDto) {
-        if (boardRepository.existsByTitle(boardDto.getTitle())) {
+    public ResponseDto createBoard(BoardRequest boardRequest) {
+        if (boardRepository.existsByTitle(boardRequest.getTitle())) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
         }
 
@@ -30,8 +30,8 @@ public class BoardServiceImpl implements BoardService {
 
         // 게시판 생성
         boardRepository.save(Board.builder()
-                .parentId(boardDto.getParentId())
-                .title(boardDto.getTitle())
+                .parentId(boardRequest.getParentId())
+                .title(boardRequest.getTitle())
                 .useState(true)
                 .orderNum(order)
                 .build());
@@ -42,27 +42,27 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public ResponseDto updateBoard(List<BoardDto> boardDtoList) {
-        for (BoardDto boardDto : boardDtoList) {
-            Board board = boardRepository.findById(boardDto.getId()).orElse(null);
+    public ResponseDto updateBoard(List<BoardRequest> boardRequestList) {
+        for (BoardRequest boardRequest : boardRequestList) {
+            Board board = boardRepository.findById(boardRequest.getId()).orElse(null);
 
             if (board == null) {
                 return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist board");
             }
 
-            List<Board> boardList = boardRepository.findAllByTitle(boardDto.getTitle());
+            List<Board> boardList = boardRepository.findAllByTitle(boardRequest.getTitle());
 
             for (Board b : boardList) {
-                if (!b.getId().equals(boardDto.getId())) {
+                if (!b.getId().equals(boardRequest.getId())) {
                     return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate board title");
                 }
             }
 
-            System.out.println(boardDto.getTitle() + " | " + boardDto.getOrderNum());
+            System.out.println(boardRequest.getTitle() + " | " + boardRequest.getOrderNum());
 
-            board.setTitle(boardDto.getTitle());
-            board.setUseState(boardDto.isUseState());
-            board.setOrderNum(boardDto.getOrderNum());
+            board.setTitle(boardRequest.getTitle());
+            board.setUseState(boardRequest.isUseState());
+            board.setOrderNum(boardRequest.getOrderNum());
         }
 
         return createResponse(HttpStatus.OK.value(), "Success update board");

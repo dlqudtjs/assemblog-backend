@@ -1,6 +1,7 @@
 package com.jr_devs.assemblog.controller;
 
-import com.jr_devs.assemblog.model.category.CategoryDto;
+import com.jr_devs.assemblog.model.category.CategoryRequest;
+import com.jr_devs.assemblog.model.category.CategoryResponse;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/api/categories")
-    public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<String> createCategory(@RequestBody CategoryRequest categoryRequest) {
         try {
-            ResponseDto responseDto = categoryService.createCategory(categoryDto);
+            ResponseDto responseDto = categoryService.createCategory(categoryRequest);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -27,7 +28,7 @@ public class CategoryController {
 
     // 전체 카테고리 조회
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDto>> readAllCategoriesAndBoards() {
+    public ResponseEntity<List<CategoryResponse>> readAllCategoriesAndBoards() {
         try {
             return ResponseEntity.ok(categoryService.readAllCategoriesAndBoards());
         } catch (Exception e) {
@@ -36,9 +37,9 @@ public class CategoryController {
     }
 
     @PatchMapping("/api/categories")
-    public ResponseEntity<String> updateCategory(@RequestBody List<CategoryDto> categoryDtoList) {
+    public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequestList) {
         try {
-            ResponseDto responseDto = categoryService.updateCategory(categoryDtoList);
+            ResponseDto responseDto = categoryService.updateCategory(categoryRequestList);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

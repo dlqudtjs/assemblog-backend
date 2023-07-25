@@ -1,7 +1,7 @@
 package com.jr_devs.assemblog.service.post;
 
 import com.jr_devs.assemblog.model.post.Post;
-import com.jr_devs.assemblog.model.post.PostDto;
+import com.jr_devs.assemblog.model.post.PostRequest;
 import com.jr_devs.assemblog.repository.JpaPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ public class PostServiceTest {
     @Autowired
     private JpaPostRepository postRepository;
 
-    private PostDto postDto;
+    private PostRequest postDto;
 
     @BeforeEach
     public void setUp() {
@@ -33,7 +33,7 @@ public class PostServiceTest {
         tags.add("test_tag1");
         tags.add("test_tag2");
 
-        postDto = PostDto.builder()
+        postDto = PostRequest.builder()
                 .boardId(5L)
                 .writerMail("user@gmail.com")
                 .title("test_title")

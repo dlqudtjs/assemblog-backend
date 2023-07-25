@@ -1,6 +1,6 @@
 package com.jr_devs.assemblog.controller;
 
-import com.jr_devs.assemblog.model.board.BoardDto;
+import com.jr_devs.assemblog.model.board.BoardRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/boards")
-    public ResponseEntity<String> createBoard(@RequestBody BoardDto boardDto) {
+    public ResponseEntity<String> createBoard(@RequestBody BoardRequest boardRequest) {
         try {
-            ResponseDto responseDto = boardService.createBoard(boardDto);
+            ResponseDto responseDto = boardService.createBoard(boardRequest);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -26,7 +26,7 @@ public class BoardController {
     }
 
     @PatchMapping("/api/boards")
-    public ResponseEntity<String> updateBoard(@RequestBody List<BoardDto> boardDtoList) {
+    public ResponseEntity<String> updateBoard(@RequestBody List<BoardRequest> boardDtoList) {
         try {
             ResponseDto responseDto = boardService.updateBoard(boardDtoList);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());

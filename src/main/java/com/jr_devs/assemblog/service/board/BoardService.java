@@ -1,16 +1,16 @@
 package com.jr_devs.assemblog.service.board;
 
 import com.jr_devs.assemblog.model.board.Board;
-import com.jr_devs.assemblog.model.board.BoardDto;
+import com.jr_devs.assemblog.model.board.BoardRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 
 import java.util.List;
 
 public interface BoardService {
 
-    ResponseDto createBoard(BoardDto boardDto);
+    ResponseDto createBoard(BoardRequest boardRequest);
 
-    ResponseDto updateBoard(List<BoardDto> boardDtoList);
+    ResponseDto updateBoard(List<BoardRequest> boardRequestList);
 
     ResponseDto deleteBoard(Long boardId);
 

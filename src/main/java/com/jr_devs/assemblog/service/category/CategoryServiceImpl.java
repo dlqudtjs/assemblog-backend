@@ -2,7 +2,8 @@ package com.jr_devs.assemblog.service.category;
 
 import com.jr_devs.assemblog.model.board.Board;
 import com.jr_devs.assemblog.model.category.Category;
-import com.jr_devs.assemblog.model.category.CategoryDto;
+import com.jr_devs.assemblog.model.category.CategoryRequest;
+import com.jr_devs.assemblog.model.category.CategoryResponse;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.repository.JpaCategoryRepository;
 import com.jr_devs.assemblog.service.board.BoardService;
@@ -23,8 +24,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final BoardService boardService;
 
     @Override
-    public ResponseDto createCategory(CategoryDto categoryDto) {
-        if (checkDuplicate(categoryDto.getTitle())) {
+    public ResponseDto createCategory(CategoryRequest categoryRequest) {
+        if (checkDuplicate(categoryRequest.getTitle())) {
             return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
         }
 
@@ -32,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 카테고리 생성
         categoryRepository.save(Category.builder()
-                .title(categoryDto.getTitle())
+                .title(categoryRequest.getTitle())
                 .useState(true)
                 .orderNum(order)
                 .build());
@@ -41,33 +42,26 @@ public class CategoryServiceImpl implements CategoryService {
         return createResponse(HttpStatus.OK.value(), "Success create category");
     }
 
-    @Override
-    public List<Category> readAllCategories() {
-        return categoryRepository.findAllByOrderByOrderNumAsc();
-    }
-
     @Transactional
     @Override
-    public ResponseDto updateCategory(List<CategoryDto> categoryDtoList) {
-        for (CategoryDto categoryDto : categoryDtoList) {
-            Category category = categoryRepository.findById(categoryDto.getId()).orElse(null);
+    public ResponseDto updateCategory(CategoryRequest categoryRequest) {
+        Category category = categoryRepository.findById(categoryRequest.getId()).orElse(null);
 
-            if (category == null) {
-                return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
-            }
-
-            List<Category> categoryList = categoryRepository.findAllByTitle(categoryDto.getTitle());
-
-            for (Category c : categoryList) {
-                if (!c.getId().equals(categoryDto.getId())) {
-                    return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
-                }
-            }
-
-            category.setTitle(categoryDto.getTitle());
-            category.setUseState(categoryDto.isUseState());
-            category.setOrderNum(categoryDto.getOrderNum());
+        if (category == null) {
+            return createResponse(HttpStatus.BAD_REQUEST.value(), "Not exist category");
         }
+
+        List<Category> categoryList = categoryRepository.findAllByTitle(categoryRequest.getTitle());
+
+        for (Category c : categoryList) {
+            if (!c.getId().equals(categoryRequest.getId())) {
+                return createResponse(HttpStatus.BAD_REQUEST.value(), "Duplicate category title");
+            }
+        }
+
+        category.setTitle(categoryRequest.getTitle());
+        category.setUseState(categoryRequest.isUseState());
+        category.setOrderNum(categoryRequest.getOrderNum());
 
         return createResponse(HttpStatus.OK.value(), "Success update category");
     }
@@ -87,26 +81,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String getCategoryTitle(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-
-        if (category == null) {
-            return null;
-        }
-
-        return category.getTitle();
+    public List<Category> readAllCategories() {
+        return categoryRepository.findAllByOrderByOrderNumAsc();
     }
 
-    public List<CategoryDto> readAllCategoriesAndBoards() {
-        List<CategoryDto> categoryDtoList = new ArrayList<>();
+    public List<CategoryResponse> readAllCategoriesAndBoards() {
+        List<CategoryResponse> categoryResponseList = new ArrayList<>();
         List<Category> categories = readAllCategories();
 
         for (Category category : categories) {
-            // 카테고리 숨김 표시는 제외
-
             List<Board> boards = boardService.readAllByParentId(category.getId());
 
-            categoryDtoList.add(CategoryDto.builder()
+            categoryResponseList.add(CategoryResponse.builder()
                     .id(category.getId())
                     .title(category.getTitle())
                     .useState(category.isUseState())
@@ -115,7 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
                     .build());
         }
 
-        return categoryDtoList;
+        return categoryResponseList;
     }
 
     private ResponseDto createResponse(int statusCode, String message) {

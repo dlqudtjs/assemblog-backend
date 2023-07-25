@@ -2,9 +2,12 @@ package com.jr_devs.assemblog.service.tag;
 
 
 import com.jr_devs.assemblog.model.post.PostTag;
+import com.jr_devs.assemblog.model.tag.Tag;
 import com.jr_devs.assemblog.repository.JpaPostTagRepository;
+import com.jr_devs.assemblog.repository.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,19 +16,24 @@ import java.util.List;
 public class PostTagServiceImpl implements PostTagService {
 
     private final JpaPostTagRepository postTagRepository;
+    private final JpaTagRepository tagRepository;
 
     @Override
-    public void createPostTag(Long boardId, Long tagId) {
-        PostTag postTag = postTagRepository.findByPostIdAndTagId(boardId, tagId);
+    @Transactional
+    public void createPostTag(Long boardId, List<String> tags) {
+        for (String tagName : tags) {
+            Tag tag = tagRepository.findByName(tagName);
+            PostTag postTag = postTagRepository.findByPostIdAndTagId(boardId, tag.getId());
 
-        if (postTag != null) {
-            return;
+            if (postTag != null) {
+                continue;
+            }
+
+            postTagRepository.save(PostTag.builder()
+                    .postId(boardId)
+                    .tagId(tag.getId())
+                    .build());
         }
-
-        postTagRepository.save(PostTag.builder()
-                .postId(boardId)
-                .tagId(tagId)
-                .build());
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.jr_devs.assemblog.controller;
 
-import com.jr_devs.assemblog.model.post.PostDto;
-import com.jr_devs.assemblog.model.post.PostListResponseDto;
-import com.jr_devs.assemblog.model.post.PostResponseDto;
+import com.jr_devs.assemblog.model.post.PostRequest;
+import com.jr_devs.assemblog.model.post.PostListResponse;
+import com.jr_devs.assemblog.model.post.PostResponse;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.service.post.PostService;
 import jakarta.servlet.http.Cookie;
@@ -24,15 +24,15 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/api/posts")
-    public ResponseEntity<String> createPost(@RequestBody PostDto postDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<String> createPost(@RequestBody PostRequest postRequest, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
             ResponseDto responseDto;
             // 임시 저장
-            if (postDto.isTempSaveState()) {
-                responseDto = postService.tempSavePost(postDto, token.substring(7));
+            if (postRequest.isTempSaveState()) {
+                responseDto = postService.tempSavePost(postRequest, token.substring(7));
             } else {
                 // 게시글 등록
-                responseDto = postService.createPost(postDto);
+                responseDto = postService.createPost(postRequest);
             }
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
@@ -41,26 +41,23 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDto> readPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<PostResponse> readPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            System.out.println(11);
-            PostResponseDto postResponseDto = postService.readPost(postId);
+            ResponseDto responseDto = postService.readPost(postId);
 
-            if (postResponseDto.getStatusCode() == HttpStatus.OK.value()) {
+            if (responseDto.getStatusCode() == HttpStatus.OK.value()) {
                 // 조회수 증가
                 viewCount(postId, request, response);
             }
 
-            System.out.println(22);
-
-            return ResponseEntity.status(postResponseDto.getStatusCode()).body(postResponseDto);
+            return ResponseEntity.status(responseDto.getStatusCode()).body((PostResponse) responseDto.getData());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @GetMapping("/lists/posts")
-    public ResponseEntity<PostListResponseDto> readPostList(
+    public ResponseEntity<PostListResponse> readPostList(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "15") int pageSize,
             @RequestParam(required = false, defaultValue = "created_at") String order,
@@ -68,15 +65,15 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "all") String boardTitle,
             @RequestParam(required = false, defaultValue = "all") String tagName) {
         try {
-            PostListResponseDto postListResponseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, tagName);
-            return ResponseEntity.status(postListResponseDto.getStatusCode()).body(postListResponseDto);
+            ResponseDto responseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, tagName);
+            return ResponseEntity.status(responseDto.getStatusCode()).body((PostListResponse) responseDto.getData());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PatchMapping("/api/posts")
-    public ResponseEntity<String> updatePost(@RequestBody PostDto postDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<String> updatePost(@RequestBody PostRequest postDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
             ResponseDto responseDto = postService.updatePost(postDto, token.substring(7));
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());

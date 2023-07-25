@@ -2,7 +2,6 @@ package com.jr_devs.assemblog.controller;
 
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.model.tag.Tag;
-import com.jr_devs.assemblog.model.tag.TagDto;
 import com.jr_devs.assemblog.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +18,8 @@ public class TagController {
     @PostMapping("/api/tags")
     public ResponseEntity<String> createTag(@RequestBody List<String> tags) {
         try {
-            for (String tag : tags) {
-                TagDto tagDto = new TagDto();
-                tagDto.setName(tag);
-                tagService.createTag(tagDto);
-            }
-
-            return ResponseEntity.ok("Success create tags");
+            ResponseDto responseDto = tagService.createTag(tags);
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
