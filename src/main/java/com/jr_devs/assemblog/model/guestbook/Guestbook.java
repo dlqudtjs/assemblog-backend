@@ -1,29 +1,26 @@
-package com.jr_devs.assemblog.model.comment;
+package com.jr_devs.assemblog.model.guestbook;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-
-import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "comment")
-public class Comment {
+@Table(name = "guestbook")
+public class Guestbook {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long postId;
 
     @Column(name = "writer_id")
     private Long writerId;
@@ -37,16 +34,15 @@ public class Comment {
     @Column(name = "parent_comment_id")
     private Long parentCommentId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreationTimestamp
     private String createdAt;
 
-    @Column(name = "like_state", columnDefinition = "TINYINT(1)")
+    @Column(name = "like_state")
     private boolean likeState;
 
-    @Column(name = "is_writer", columnDefinition = "TINYINT(1)")
+    @Column(name = "is_writer")
     private boolean isWriter;
 
-    @Column(name = "deleted", columnDefinition = "TINYINT(1)")
     private boolean deleted;
 }

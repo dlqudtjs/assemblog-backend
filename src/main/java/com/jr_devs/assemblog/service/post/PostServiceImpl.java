@@ -45,8 +45,6 @@ public class PostServiceImpl implements PostService {
 
         List<Post> tempSavePost = getTempSavePosts(poseRequest.getWriterMail());
 
-        System.out.println(tempSavePost.size());
-
         // 작성 버튼을 눌렀을 때 같은 제목의 임시 저장 글이 있으면 삭제
         for (Post p : tempSavePost) {
             if (p.getTitle().equals(poseRequest.getTitle())) {
@@ -116,7 +114,6 @@ public class PostServiceImpl implements PostService {
             return createResponse(HttpStatus.NOT_FOUND.value(), "Not found post", null);
         }
 
-        System.out.println(2);
         // 게시글의 태그 목록 가져오기
         List<PostTag> postTags = postTagService.getPostTagsByPostId(postId);
         // 태그 Id 목록을 태그 이름 목록으로 변환

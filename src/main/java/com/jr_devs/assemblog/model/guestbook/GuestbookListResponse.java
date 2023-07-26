@@ -1,18 +1,14 @@
-package com.jr_devs.assemblog.model.comment;
+package com.jr_devs.assemblog.model.guestbook;
 
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @Builder
-public class CommentListResponse {
+@NoArgsConstructor
+@AllArgsConstructor
+public class GuestbookListResponse {
 
     private Long id;
 

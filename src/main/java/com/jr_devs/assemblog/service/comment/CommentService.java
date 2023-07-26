@@ -12,7 +12,7 @@ public interface CommentService {
 
     List<CommentListResponse> readCommentList(Long postId);
 
-    ResponseDto deleteComment(Long commentId, String password);
+    ResponseDto deleteComment(Long commentId, String password, String token);
 
     int getCommentCount(Long postId);
 

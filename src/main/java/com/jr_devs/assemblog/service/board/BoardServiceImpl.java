@@ -58,8 +58,6 @@ public class BoardServiceImpl implements BoardService {
                 }
             }
 
-            System.out.println(boardRequest.getTitle() + " | " + boardRequest.getOrderNum());
-
             board.setTitle(boardRequest.getTitle());
             board.setUseState(boardRequest.isUseState());
             board.setOrderNum(boardRequest.getOrderNum());

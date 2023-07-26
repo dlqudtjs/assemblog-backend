@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/api/categories")
-    public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequestList) {
+    public ResponseEntity<String> updateCategory(@RequestBody List<CategoryRequest> categoryRequestList) {
         try {
             ResponseDto responseDto = categoryService.updateCategory(categoryRequestList);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());

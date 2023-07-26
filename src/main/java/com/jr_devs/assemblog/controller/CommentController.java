@@ -27,19 +27,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments")
-    public ResponseEntity<String> deleteComment(@RequestParam Long id, @RequestParam String password) {
+    public ResponseEntity<String> deleteComment(@RequestParam Long id, @RequestParam String password, @RequestHeader("Authorization") String token) {
         try {
-            ResponseDto responseDto = commentService.deleteComment(id, password);
-            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/api/comments")
-    public ResponseEntity<String> deleteCommentByAdmin(@RequestParam Long id, @RequestHeader("Authorization") String token) {
-        try {
-            ResponseDto responseDto = commentService.deleteComment(id, token);
+            ResponseDto responseDto = commentService.deleteComment(id, password, token);
             return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
