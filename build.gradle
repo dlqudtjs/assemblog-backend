@@ -62,11 +62,30 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-    outputs.dir snippetsDir // (3)
     useJUnitPlatform()
+    outputs.dir snippetsDir // (3)
 }
 
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir // (4)
     dependsOn test // (5)
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file('build/docs/asciidoc')
+    into file('src/main/resources/static/docs')
+}
+
+bootJar {
+    dependsOn copyDocument
+
+    copy {
+        from "${asciidoctor.outputDir}"
+        into 'BOOT-INF/classes/static/docs'
+    }
 }

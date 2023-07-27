@@ -17,12 +17,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comments")
-    public ResponseEntity<String> createComment(@RequestBody CommentRequest commentRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<ResponseDto> createComment(@RequestBody CommentRequest commentRequest, @RequestHeader("Authorization") String token) {
         try {
             ResponseDto responseDto = commentService.createComment(commentRequest, token);
-            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto.getMessage());
+            return ResponseEntity.status(responseDto.getStatusCode()).body(responseDto);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ResponseDto.builder()
+                    .statusCode(400)
+                    .message(e.getMessage())
+                    .build());
         }
     }
 
