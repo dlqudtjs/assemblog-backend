@@ -71,6 +71,5 @@ public class CommentApiDocsTest extends RestDocumentSupport {
                         )
                 )
                 .andExpect(status().isOk());
-
     }
 }

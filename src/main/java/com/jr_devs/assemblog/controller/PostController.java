@@ -63,9 +63,10 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "created_at") String order,
             @RequestParam(required = false, defaultValue = "desc") String orderType,
             @RequestParam(required = false, defaultValue = "all") String boardTitle,
+            @RequestParam(required = false, defaultValue = "all") String searchWord,
             @RequestParam(required = false, defaultValue = "all") String tagName) {
         try {
-            ResponseDto responseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, tagName);
+            ResponseDto responseDto = postService.readPostList(currentPage, pageSize, order, orderType, boardTitle, searchWord, tagName);
             return ResponseEntity.status(responseDto.getStatusCode()).body((PostListResponse) responseDto.getData());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);

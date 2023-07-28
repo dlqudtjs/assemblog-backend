@@ -200,7 +200,7 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 목록 조회 (옵션을 이용하여 정렬 및 검색 가능)
     @Override
-    public ResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle, String tagName) {
+    public ResponseDto readPostList(int currentPage, int pageSize, String order, String orderType, String boardTitle, String searchWord, String tagName) {
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
@@ -212,6 +212,11 @@ public class PostServiceImpl implements PostService {
 
         List<PostListResponseDto> postListResponseDtos = new ArrayList<>();
         for (Post post : postList) {
+            // 게시글 검색에 옵션을 주었을 때 해당 옵션에 맞는 게시글만 가져온다.
+            if (!searchWord.equals("all") && !post.getTitle().contains(searchWord) && !post.getContent().contains(searchWord)) {
+                continue;
+            }
+
             postListResponseDtos.add(PostListResponseDto.builder()
                     .postId(post.getId())
                     .username(userService.getUsernameByEmail(post.getWriterMail()))

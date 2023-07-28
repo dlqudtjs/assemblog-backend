@@ -17,7 +17,7 @@ public interface PostService {
 
     ResponseDto deletePost(Long postId, String token);
 
-    ResponseDto readPostList(int pageStartIndex, int pageEndIndex, String order, String orderType, String boardTitle, String tagName);
+    ResponseDto readPostList(int pageStartIndex, int pageEndIndex, String order, String orderType, String boardTitle, String searchWord, String tagName);
 
     void countView(Long postId);
 }
