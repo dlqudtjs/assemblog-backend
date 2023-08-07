@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -208,15 +210,10 @@ public class PostServiceImpl implements PostService {
         long boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
         long tagId = tagName.equals("all") ? 0 : tagService.readTagByName(tagName).getId();
 
-        postList = postRepository.findPostList(pageStartIndex, pageSize, order, orderType, boardId, tagId);
+        postList = postRepository.findPostList(pageStartIndex, pageSize, boardId, searchWord, tagId);
 
         List<PostListResponseDto> postListResponseDtos = new ArrayList<>();
         for (Post post : postList) {
-            // 게시글 검색에 옵션을 주었을 때 해당 옵션에 맞는 게시글만 가져온다.
-            if (!searchWord.equals("all") && !post.getTitle().contains(searchWord) && !post.getContent().contains(searchWord)) {
-                continue;
-            }
-
             postListResponseDtos.add(PostListResponseDto.builder()
                     .postId(post.getId())
                     .username(userService.getUsernameByEmail(post.getWriterMail()))
@@ -233,8 +230,10 @@ public class PostServiceImpl implements PostService {
                     .build());
         }
 
-        int postCount = postRepository.findPostCount(boardId, tagId);
+        int postCount = postRepository.findPostCount(boardId, tagId, searchWord);
         int totalPage = (postCount % pageSize == 0) ? postCount / pageSize : postCount / pageSize + 1;
+
+        postListResponseDtos = orderPostList(postListResponseDtos, order, orderType);
 
         return createResponse(HttpStatus.OK.value(), "Success read post list",
                 PostListResponse.builder()
@@ -242,6 +241,28 @@ public class PostServiceImpl implements PostService {
                         .currentPage(currentPage)
                         .postList(postListResponseDtos)
                         .build());
+    }
+
+    private List<PostListResponseDto> orderPostList(List<PostListResponseDto> postListResponseDtos, String order, String orderType) {
+        if (orderType.equals("desc")) {
+            if (order.equals("view")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getViewCount).reversed());
+            } else if (order.equals("like")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getLikeCount).reversed());
+            } else if (order.equals("created_at")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCreatedAt).reversed());
+            }
+        } else if (orderType.equals("asc")) {
+            if (order.equals("view")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getViewCount));
+            } else if (order.equals("like")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getLikeCount));
+            } else if (order.equals("created_at")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCreatedAt));
+            }
+        }
+
+        return postListResponseDtos;
     }
 
     @Override
