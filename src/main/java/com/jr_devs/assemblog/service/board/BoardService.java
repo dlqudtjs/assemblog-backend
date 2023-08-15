@@ -19,4 +19,6 @@ public interface BoardService {
     String getCategoryTitleByBoardId(Long boardId);
 
     String getBoardTitle(Long id);
+
+    int getPostCount(Long boardId);
 }

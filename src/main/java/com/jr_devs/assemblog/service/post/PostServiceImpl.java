@@ -210,13 +210,14 @@ public class PostServiceImpl implements PostService {
         long boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
         long tagId = tagName.equals("all") ? 0 : tagService.readTagByName(tagName).getId();
 
-        postList = postRepository.findPostList(pageStartIndex, pageSize, boardId, searchWord, tagId);
+        postList = postRepository.findPostList(boardId, searchWord, tagId);
 
         List<PostListResponseDto> postListResponseDtos = new ArrayList<>();
         for (Post post : postList) {
             postListResponseDtos.add(PostListResponseDto.builder()
                     .postId(post.getId())
                     .username(userService.getUsernameByEmail(post.getWriterMail()))
+                    .profileImage(userService.getUserIntroductionList(post.getWriterMail()).get(0).getProfileImageURL())
                     .title(post.getTitle())
                     .thumbnail(post.getThumbnail())
                     .preview(post.getPreview())
@@ -225,21 +226,29 @@ public class PostServiceImpl implements PostService {
                     .categoryTitle(boardService.getCategoryTitleByBoardId(post.getBoardId()))
                     .boardTitle(boardService.getBoardTitle(post.getBoardId()))
                     .viewCount(getPostViewCount(post.getId()))
-                    .likeCount(0)
                     .commentCount(commentService.getCommentCount(post.getId()))
                     .build());
+        }
+        postListResponseDtos = orderPostList(postListResponseDtos, order, orderType);
+
+        List<PostListResponseDto> sortedPostListResponseDtos = new ArrayList<>();
+        for (int i = pageStartIndex; i < pageStartIndex + pageSize; i++) {
+            // 페이지 범위를 벗어나면 break
+            if (i >= postListResponseDtos.size()) {
+                break;
+            }
+
+            sortedPostListResponseDtos.add(postListResponseDtos.get(i));
         }
 
         int postCount = postRepository.findPostCount(boardId, tagId, searchWord);
         int totalPage = (postCount % pageSize == 0) ? postCount / pageSize : postCount / pageSize + 1;
 
-        postListResponseDtos = orderPostList(postListResponseDtos, order, orderType);
-
         return createResponse(HttpStatus.OK.value(), "Success read post list",
                 PostListResponse.builder()
                         .totalPage(totalPage)
                         .currentPage(currentPage)
-                        .postList(postListResponseDtos)
+                        .postList(sortedPostListResponseDtos)
                         .build());
     }
 
@@ -247,18 +256,18 @@ public class PostServiceImpl implements PostService {
         if (orderType.equals("desc")) {
             if (order.equals("view")) {
                 postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getViewCount).reversed());
-            } else if (order.equals("like")) {
-                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getLikeCount).reversed());
             } else if (order.equals("created_at")) {
                 postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCreatedAt).reversed());
+            } else if (order.equals("comment")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCommentCount).reversed());
             }
         } else if (orderType.equals("asc")) {
             if (order.equals("view")) {
                 postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getViewCount));
-            } else if (order.equals("like")) {
-                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getLikeCount));
             } else if (order.equals("created_at")) {
                 postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCreatedAt));
+            } else if (order.equals("comment")) {
+                postListResponseDtos.sort(Comparator.comparing(PostListResponseDto::getCommentCount));
             }
         }
 

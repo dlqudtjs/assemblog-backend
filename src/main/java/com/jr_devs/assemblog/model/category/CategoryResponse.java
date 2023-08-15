@@ -1,6 +1,7 @@
 package com.jr_devs.assemblog.model.category;
 
 import com.jr_devs.assemblog.model.board.Board;
+import com.jr_devs.assemblog.model.board.BoardResponse;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -22,5 +23,7 @@ public class CategoryResponse {
 
     private int orderNum;
 
-    private List<Board> boards;
+    private int boardCount;
+
+    private List<BoardResponse> boards;
 }

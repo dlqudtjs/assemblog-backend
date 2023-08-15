@@ -82,6 +82,7 @@ public class UserServiceImpl implements UserService {
         // 회원가입 시 유저 소개글 생성
         userIntroductionRepository.save(UserIntroduction.builder()
                 .userId(createdUser.getId())
+                .username(createdUser.getUsername())
                 .introduction(null)
                 .build());
 
@@ -100,7 +101,6 @@ public class UserServiceImpl implements UserService {
         return UserResponse.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .profileImageURL(user.getProfileImageURL())
                 .build();
     }
 
@@ -111,16 +111,14 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 검사
         if (!passwordEncoder.matches(userUpdateRequest.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Not Match Password");
+            return ResponseDto.builder()
+                    .message("Not match password")
+                    .statusCode(HttpStatus.OK.value())
+                    .build();
         }
 
         // 유저 정보 변경
-        user.setUsername(userUpdateRequest.getUsername());
-        user.setProfileImageURL(userUpdateRequest.getProfileImageUrl());
-
-        if (!userUpdateRequest.getNewPassword().equals("")) {
-            user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
-        }
+        user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
 
         return ResponseDto.builder()
                 .message("Success update user")
@@ -141,7 +139,12 @@ public class UserServiceImpl implements UserService {
 
         UserIntroduction findUserIntroduction = userIntroductionRepository.findByUserId(user.getId());
 
+        // 유저테이블에 저장된 username 도 함께 변경한다.
+        user.setUsername(userIntroductionDto.getUsername());
+
+        findUserIntroduction.setUsername(userIntroductionDto.getUsername());
         findUserIntroduction.setIntroduction(userIntroductionDto.getIntroduction());
+        findUserIntroduction.setProfileImageURL(userIntroductionDto.getProfileImageURL());
         findUserIntroduction.setBackgroundImageURL(userIntroductionDto.getBackgroundImageURL());
 
         List<UserIntroductionLink> userIntroductionLinkList = userIntroductionLinkRepository.findByUserId(findUserIntroduction.getId());
@@ -194,10 +197,10 @@ public class UserServiceImpl implements UserService {
             }
 
             userIntroductionResponseList.add(UserIntroductionResponse.builder()
-                    .username(user.getUsername())
+                    .username(userIntroduction.getUsername())
                     .email(user.getEmail())
                     .introduction(userIntroduction.getIntroduction())
-                    .profileImageURL(user.getProfileImageURL())
+                    .profileImageURL(userIntroduction.getProfileImageURL())
                     .backgroundImageURL(userIntroduction.getBackgroundImageURL())
                     .links(userIntroductionLinkList)
                     .build());
@@ -212,9 +215,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkDuplicate(UserRequest userRequest) {
-        this.userRepository.findByUsername(userRequest.getUsername()).ifPresent((findUser) -> {
-            throw new IllegalStateException("Username Already exist");
-        });
         this.userRepository.findByEmail(userRequest.getEmail()).ifPresent((findUser) -> {
             throw new IllegalStateException("Email Already exist");
         });

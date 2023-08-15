@@ -86,6 +86,9 @@ public class GuestbookServiceImpl implements GuestbookService {
                     .build());
         }
 
+        // 생성일 기준으로 정렬
+        commentListResponse.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+
         return createResponse(HttpStatus.OK.value(), "Success to read guestbook list", commentListResponse);
     }
 

@@ -20,7 +20,12 @@ public class UserIntroduction {
 
     private Long userId;
 
+    private String username;
+
     private String introduction;
+
+    @Column(name = "profile_image_url")
+    private String profileImageURL;
 
     @Column(name = "background_image_url")
     private String backgroundImageURL;

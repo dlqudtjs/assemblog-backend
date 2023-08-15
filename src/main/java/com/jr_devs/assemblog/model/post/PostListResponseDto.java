@@ -16,6 +16,7 @@ public class PostListResponseDto {
 
     private Long postId;
     private String username;
+    private String profileImage;
     private String title;
     private String thumbnail;
     private String preview;
@@ -24,6 +25,5 @@ public class PostListResponseDto {
     private String categoryTitle;
     private String boardTitle;
     private int viewCount;
-    private int likeCount;
     private int commentCount;
 }

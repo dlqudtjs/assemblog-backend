@@ -14,12 +14,8 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findById(Long id);
 
-    List<Post> findByWriterMailAndTitle(String writerMail, String title);
-
-    @Query(value = "CALL get_post_list(:page_start_index, :page_size, :board_id, :search_word, :tag_id)", nativeQuery = true)
-    List<Post> findPostList(@Param("page_start_index") int pageStartIndex,
-                            @Param("page_size") int pageSize,
-                            @Param("board_id") long boardId,
+    @Query(value = "CALL get_post_list(:board_id, :search_word, :tag_id)", nativeQuery = true)
+    List<Post> findPostList(@Param("board_id") long boardId,
                             @Param("search_word") String searchWord,
                             @Param("tag_id") long tagId);
 
@@ -31,6 +27,8 @@ public interface JpaPostRepository extends JpaRepository<Post, Long> {
     void deleteByTitle(String title);
 
     void deleteById(Long id);
+
+    int countByBoardId(Long boardId);
 
     List<Post> findByWriterMailAndTempSaveState(String writerMail, boolean tempSaveState);
 

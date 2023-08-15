@@ -33,9 +33,6 @@ public class User implements UserDetails {
     @Column(length = 255, nullable = false)
     private String password;
 
-    @Column(name = "profile_image_url")
-    private String profileImageURL;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

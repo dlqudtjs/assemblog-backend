@@ -19,4 +19,6 @@ public interface JpaBoardRepository extends JpaRepository<Board, Long> {
     Boolean existsByTitle(String title);
 
     Long countBy();
+
+    int countByParentId(Long parentId);
 }

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>API 문서</title>
+<title>Comment-API 문서</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,12 +438,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>API 문서</h1>
+<h1>Comment-API 문서</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="_comment_생성">Comment 생성</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>HTTP request:</p>
 </div>
@@ -453,10 +456,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 Content-Type: application/json
 Authorization: Bearer undefined
 Accept: application/json
-Content-Length: 102
+Content-Length: 134
 Host: localhost:8080
 
-{"postId":1,"nickname":"test_nickname","content":"test_content","parentCommentId":0,"password":"1234"}</code></pre>
+{
+  "postId" : 1,
+  "nickname" : "test_nickname",
+  "content" : "test_content",
+  "parentCommentId" : 0,
+  "password" : "1234"
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -466,16 +475,22 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 75
+Content-Length: 95
 
-{"data":null,"message":"댓글이 등록되었습니다.","statusCode":200}</code></pre>
+{
+  "data" : null,
+  "message" : "댓글이 등록되었습니다.",
+  "statusCode" : 200
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-27 16:19:00 +0900
+Last updated 2023-07-27 16:36:20 +0900
 </div>
 </div>
 </body>

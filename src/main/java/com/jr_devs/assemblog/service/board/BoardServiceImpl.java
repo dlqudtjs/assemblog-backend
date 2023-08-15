@@ -6,6 +6,7 @@ import com.jr_devs.assemblog.model.board.BoardRequest;
 import com.jr_devs.assemblog.model.dto.ResponseDto;
 import com.jr_devs.assemblog.repository.JpaBoardRepository;
 import com.jr_devs.assemblog.repository.JpaCategoryRepository;
+import com.jr_devs.assemblog.repository.JpaPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
+    private final JpaPostRepository postRepository;
     private final JpaBoardRepository boardRepository;
     private final JpaCategoryRepository categoryRepository;
 
@@ -107,6 +109,11 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return board.getTitle();
+    }
+
+    @Override
+    public int getPostCount(Long boardId) {
+        return postRepository.countByBoardId(boardId);
     }
 
     private Long getBoardOrder() {

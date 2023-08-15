@@ -1,6 +1,7 @@
 package com.jr_devs.assemblog.service.category;
 
 import com.jr_devs.assemblog.model.board.Board;
+import com.jr_devs.assemblog.model.board.BoardResponse;
 import com.jr_devs.assemblog.model.category.Category;
 import com.jr_devs.assemblog.model.category.CategoryRequest;
 import com.jr_devs.assemblog.model.category.CategoryResponse;
@@ -94,12 +95,28 @@ public class CategoryServiceImpl implements CategoryService {
         for (Category category : categories) {
             List<Board> boards = boardService.readAllByParentId(category.getId());
 
+            int postCount = 0;
+            List<BoardResponse> boardResponseList = new ArrayList<>();
+            for (Board board : boards) {
+                boardResponseList.add(BoardResponse.builder()
+                        .id(board.getId())
+                        .parentId(board.getParentId())
+                        .title(board.getTitle())
+                        .useState(board.isUseState())
+                        .orderNum(board.getOrderNum())
+                        .postCount(boardService.getPostCount(board.getId()))
+                        .build());
+
+                postCount += boardService.getPostCount(board.getId());
+            }
+
             categoryResponseList.add(CategoryResponse.builder()
                     .id(category.getId())
                     .title(category.getTitle())
                     .useState(category.isUseState())
                     .orderNum(category.getOrderNum())
-                    .boards(boards)
+                    .boardCount(postCount)
+                    .boards(boardResponseList)
                     .build());
         }
 
