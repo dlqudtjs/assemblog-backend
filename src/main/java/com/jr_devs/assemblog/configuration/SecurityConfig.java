@@ -42,11 +42,10 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 // 권한 설정 시작 (URL 관리)
+                // URL 권한 설정은 JwtAuthenticationFilter 에서 shouldNotFilter 메소드를 통해 설정한다.
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests
-                            // "/users/signup", "/users/login" 은 누구나 접근 가능
-                            .requestMatchers("/users/signup", "/users/login", "/refresh").permitAll()
-                            .requestMatchers("/*", "/*/*", "/lists/posts").permitAll()
+                            .requestMatchers("/**").permitAll()
                             // api 로 시작하는 경로는 인증이 필요함
                             .requestMatchers("/api/**").authenticated();
                 })

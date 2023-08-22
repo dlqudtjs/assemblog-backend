@@ -2,14 +2,8 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-= Comment-API 문서
+link:comment/comment.html[Go to Comment]
 
-== Comment 생성
+link:post/post.html[Go to Post]
 
-HTTP request:
 
-include::{snippets}/comment-api-docs-test/create-comment/http-request.adoc[]
-
-HTTP response:
-
-include::{snippets}/comment-api-docs-test/create-comment/http-response.adoc[]

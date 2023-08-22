@@ -1,0 +1,15 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Post-API 문서
+
+== PostList 조회
+
+HTTP parameters:
+
+include::{snippets}/post-api-docs-test/read-post-list/query-parameters.adoc[]
+
+HTTP response:
+
+include::{snippets}/post-api-docs-test/read-post-list/http-response.adoc[]

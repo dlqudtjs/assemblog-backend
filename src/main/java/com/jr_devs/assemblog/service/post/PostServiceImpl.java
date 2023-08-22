@@ -206,13 +206,34 @@ public class PostServiceImpl implements PostService {
         currentPage = (currentPage <= 0) ? 1 : currentPage;
         int pageStartIndex = (currentPage - 1) * pageSize;
 
-        List<Post> postList;
-        long boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
-        long tagId = tagName.equals("all") ? 0 : tagService.readTagByName(tagName).getId();
+        long boardId = 0, tagId = 0;
+        boolean isSearchBoard = false, isSearchTag = false;
 
-        postList = postRepository.findPostList(boardId, searchWord, tagId);
+        // 게시판 검색이 "all" 이거나 게시판이 존재하면 게시판 Id를 가져온다.
+        if (boardTitle.equals("all") || boardRepository.findByTitle(boardTitle).isPresent()) {
+            boardId = boardTitle.equals("all") ? 0 : boardRepository.findByTitle(boardTitle).get().getId();
+            isSearchBoard = true;
+        }
+
+        // 태그 검색이 "all" 이거나 태그가 존재하면 태그 Id를 가져온다.
+        if (tagName.equals("all") || tagService.readTagByName(tagName) != null) {
+            tagId = tagName.equals("all") ? 0 : tagService.readTagByName(tagName).getId();
+            isSearchTag = true;
+        }
+
+        List<Post> postList = new ArrayList<>();
+        int postCount = 0;
+        int totalPage = 0;
+        // boardId, tagId 둘 다 검색이 됐다면 두 검색 결과의 교집합을 가져온다.
+        if (isSearchBoard && isSearchTag) {
+            postList = postRepository.findPostList(boardId, searchWord, tagId);
+            postCount = postRepository.findPostCount(boardId, tagId, searchWord);
+            totalPage = (postCount % pageSize == 0) ? postCount / pageSize : postCount / pageSize + 1;
+        }
 
         List<PostListResponseDto> postListResponseDtos = new ArrayList<>();
+
+        // 위에 boardId, tagId가 둘 중 하나라도 검색이 되지 않았으면 postList 는 비어있기 때문에 아무것도 추가되지 않는다.
         for (Post post : postList) {
             postListResponseDtos.add(PostListResponseDto.builder()
                     .postId(post.getId())
@@ -241,8 +262,6 @@ public class PostServiceImpl implements PostService {
             sortedPostListResponseDtos.add(postListResponseDtos.get(i));
         }
 
-        int postCount = postRepository.findPostCount(boardId, tagId, searchWord);
-        int totalPage = (postCount % pageSize == 0) ? postCount / pageSize : postCount / pageSize + 1;
 
         return createResponse(HttpStatus.OK.value(), "Success read post list",
                 PostListResponse.builder()
